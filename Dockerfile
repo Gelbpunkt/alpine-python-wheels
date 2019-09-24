@@ -33,6 +33,10 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     cd psutil && \
     pip wheel . && \
     cd .. && \
+    git clone https://github.com/scrapinghub/dateparser && \
+    cd dateparser && \
+    pip wheel . && \
+    cd .. && \
     apk del .build-deps
 
 # allow for build caching
