@@ -40,6 +40,7 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     git clone https://github.com/Rapptz/discord.py && \
     cd discord.py && \
     git pull origin pull/1849/merge && \
+    sed -i "s:3.6:3.7:g" requirements.txt && \
     tail -n +2 "requirements.txt" > "requirements.txt.new" && \
     pip wheel . --no-deps -r requirements.txt.new && \
     cd .. && \
