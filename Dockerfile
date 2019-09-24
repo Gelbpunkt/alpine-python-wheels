@@ -37,6 +37,12 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     cd dateparser && \
     pip wheel . && \
     cd .. && \
+    git clone https://github.com/Rapptz/discord.py && \
+    cd discord.py && \
+    git pull origin pull/1849/merge && \
+    tail -n +2 "requirements.txt" > "requirements.txt.new" && \
+    pip wheel . --no-deps -r requirements.txt.new && \
+    cd .. && \
     apk del .build-deps
 
 # allow for build caching
