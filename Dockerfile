@@ -1,4 +1,4 @@
-FROM python:3.8.0-alpine3.10
+FROM python:3.8.1-alpine3.11
 
 WORKDIR /build
 
@@ -8,7 +8,7 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     git clone https://github.com/cython/cython && \
     cd cython && \
     pip wheel . && \
-    pip install Cython-3.0a0-cp38-cp38-linux_x86_64.whl && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
@@ -42,9 +42,7 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     git clone https://github.com/Rapptz/discord.py && \
     cd discord.py && \
     git pull origin pull/1849/merge --no-edit && \
-    sed -i "s:3.6:3.7:g" requirements.txt && \
-    tail -n +2 "requirements.txt" > "requirements.txt.new" && \
-    pip wheel . --no-deps -r requirements.txt.new && \
+    pip wheel . && \
     cd .. && \
     apk del .build-deps
 
