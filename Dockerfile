@@ -44,6 +44,23 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     git pull origin pull/1849/merge --no-edit && \
     pip wheel . && \
     cd .. && \
+    git clone https://github.com/PythonistaGuild/Wavelink && \
+    cd Wavelink && \
+    sed -i "s:<7.0:<9.0:g" requirements.txt && \
+    pip wheel . && \
+    cd .. && \
+    git clone https://github.com/Gelbpunkt/aiowiki && \
+    cd aiowiki && \
+    pip wheel . && \
+    cd .. && \
+    git clone https://github.com/Diniboy1123/raven-aiohttp && \
+    cd raven-aiohttp && \
+    pip wheel . && \
+    cd .. && \
+    git clone https://git.travitia.xyz/Adrian/fantasy-names && \
+    cd fantasy-names && \
+    pip wheel . && \
+    cd .. && \
     apk del .build-deps
 
 # allow for build caching
