@@ -61,6 +61,24 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     cd fantasy-names && \
     pip wheel . && \
     cd .. && \
+    git clone https://github.com/nir0s/distro && \
+    cd distro && \
+    pip wheel . && \
+    cd .. && \
+    git clone https://github.com/dabeaz/ply && \
+    cd ply && \
+    echo -e "from distutils.core import setup\nfrom Cython.Build import cythonize\nsetup(name=\"ply\", ext_modules=cythonize('ply/*.py'))" > setup.py && \
+    sed -i 's/f = sys._getframe(levels)/f = sys._getframe()/' ply/lex.py && \
+    pip wheel . && \
+    cd .. && \
+    git clone https://github.com/jmoiron/humanize && \
+    cd humanize && \
+    pip wheel . && \
+    cd .. && \
+    git clone https://github.com/hellysmile/contextvars_executor && \
+    cd contextvars_executor && \
+    pip wheel . && \
+    cd .. && \
     apk del .build-deps
 
 # allow for build caching
