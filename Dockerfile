@@ -69,6 +69,7 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     cd ply && \
     echo -e "from distutils.core import setup\nfrom Cython.Build import cythonize\nsetup(name=\"ply\", ext_modules=cythonize('ply/*.py'))" > setup.py && \
     sed -i 's/f = sys._getframe(levels)/f = sys._getframe()/' ply/lex.py && \
+    sed -i 's/f = sys._getframe(levels)/f = sys._getframe()/' ply/yacc.py && \
     pip wheel . && \
     cd .. && \
     git clone https://github.com/jmoiron/humanize && \
