@@ -1,8 +1,11 @@
-FROM python:3.8.1-alpine3.11
+FROM python:3.9.0a2-alpine3.10
 
 WORKDIR /build
 
-RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers make automake libtool m4 autoconf && \
+RUN sed -i "s:v3.10:edge:g" /etc/apk/repositories && \
+    apk update && apk upgrade && \
+    pip install -U pip && \
+    apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers make automake libtool m4 autoconf && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/cython/cython && \
@@ -13,6 +16,7 @@ RUN apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers mak
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
+    sed -i "s:0.29.14:3.0a0:g" setup.py && \
     pip wheel . && \
     cd .. && \
     git clone https://github.com/MagicStack/uvloop && \
