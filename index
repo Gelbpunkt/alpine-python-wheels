@@ -13,7 +13,10 @@ distro-1.4.0-py2.py3-none-any.whl
 fantasy_names-1.0.0-py3-none-any.whl
 hiredis-1.0.1-cp39-cp39-linux_x86_64.whl
 humanize-0.5.1-py3-none-any.whl
+humanize-1.0.1.dev28-py3-none-any.whl
+humanize-1.0.1.dev32-py3-none-any.whl
 idna-2.8-py2.py3-none-any.whl
+idna-2.9-py2.py3-none-any.whl
 multidict-4.7.4-cp39-cp39-linux_x86_64.whl
 ply-0.0.0-cp39-cp39-linux_x86_64.whl
 psutil-5.7.0-cp39-cp39-linux_x86_64.whl
@@ -22,9 +25,11 @@ pytz-2019.3-py2.py3-none-any.whl
 raven-6.10.0-py2.py3-none-any.whl
 raven_aiohttp-0.7.0-py2.py3-none-any.whl
 regex-2020.1.8-cp39-cp39-linux_x86_64.whl
+regex-2020.2.18-cp39-cp39-linux_x86_64.whl
 six-1.14.0-py2.py3-none-any.whl
 tzlocal-2.0.0-py2.py3-none-any.whl
 uvloop-0.15.0.dev0-cp39-cp39-linux_x86_64.whl
 wavelink-0.3.5-py3-none-any.whl
+wavelink-0.5.1-py3-none-any.whl
 websockets-8.1-cp39-cp39-linux_x86_64.whl
 yarl-1.4.2-cp39-cp39-linux_x86_64.whl
