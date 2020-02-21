@@ -2,9 +2,7 @@ FROM gelbpunkt/python:latest
 
 WORKDIR /build
 
-RUN sed -i "s:v3.10:edge:g" /etc/apk/repositories && \
-    apk update && apk upgrade && \
-    pip install -U pip && \
+RUN pip install -U pip && \
     apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers make automake libtool m4 autoconf && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
@@ -18,15 +16,18 @@ RUN sed -i "s:v3.10:edge:g" /etc/apk/repositories && \
     git submodule update --init --recursive && \
     sed -i "s:0.29.14:3.0a0:g" setup.py && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/aio-libs/aioredis && \
     cd aioredis && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     mkdir aiohttp && \
     cd aiohttp && \
@@ -34,40 +35,48 @@ RUN sed -i "s:v3.10:edge:g" /etc/apk/repositories && \
     tar -xvzf v3.6.2.tar.gz && \
     cd aiohttp-3.6.2 && \
     pip wheel . && \
+    pip install *.whl && \
     cd ../.. && \
     git clone https://github.com/giampaolo/psutil && \
     cd psutil && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/scrapinghub/dateparser && \
     cd dateparser && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/Rapptz/discord.py && \
     cd discord.py && \
     git pull origin pull/1849/merge --no-edit && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/PythonistaGuild/Wavelink && \
     cd Wavelink && \
-    sed -i "s:<7.0:<9.0:g" requirements.txt && \
-    pip wheel . && \
+    pip wheel . --no-deps && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/aiowiki && \
     cd aiowiki && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/Diniboy1123/raven-aiohttp && \
     cd raven-aiohttp && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://git.travitia.xyz/Adrian/fantasy-names && \
     cd fantasy-names && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/nir0s/distro && \
     cd distro && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/dabeaz/ply && \
     cd ply && \
@@ -75,14 +84,17 @@ RUN sed -i "s:v3.10:edge:g" /etc/apk/repositories && \
     sed -i 's/f = sys._getframe(levels)/f = sys._getframe()/' ply/lex.py && \
     sed -i 's/f = sys._getframe(levels)/f = sys._getframe()/' ply/yacc.py && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/jmoiron/humanize && \
     cd humanize && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/hellysmile/contextvars_executor && \
     cd contextvars_executor && \
     pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     apk del .build-deps
 
