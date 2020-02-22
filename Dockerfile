@@ -3,7 +3,7 @@ FROM gelbpunkt/python:latest
 WORKDIR /build
 
 RUN pip install -U pip && \
-    apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers make automake libtool m4 autoconf && \
+    apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers make automake libtool m4 autoconf jq curl && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/cython/cython && \
@@ -31,9 +31,10 @@ RUN pip install -U pip && \
     cd .. && \
     mkdir aiohttp && \
     cd aiohttp && \
-    wget https://github.com/aio-libs/aiohttp/archive/v3.6.2.tar.gz && \
-    tar -xvzf v3.6.2.tar.gz && \
-    cd aiohttp-3.6.2 && \
+    aiohttp="$(curl -s https://pypi.org/pypi/aiohttp/json | jq -r '.info.version')" && \
+    wget "https://github.com/aio-libs/aiohttp/archive/v$aiohttp.tar.gz" && \
+    tar -xvzf "v$aiohttp.tar.gz" && \
+    cd "aiohttp-$aiohttp" && \
     pip wheel . && \
     pip install *.whl && \
     cd ../.. && \
