@@ -3,7 +3,7 @@ FROM gelbpunkt/python:latest
 WORKDIR /build
 
 RUN pip install -U pip && \
-    apk add --no-cache --virtual .build-deps git gcc  musl-dev linux-headers make automake libtool m4 autoconf jq curl && \
+    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf jq curl libffi-dev ghc && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/cython/cython && \
@@ -21,7 +21,13 @@ RUN pip install -U pip && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
+    git pull origin pull/327/merge --no-edit && \
     pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/aaugustin/websockets && \
+    cd websockets && \
+    pip wheel ".[websockets.speedups]" && \
     pip install *.whl && \
     cd .. && \
     git clone https://github.com/aio-libs/aioredis && \
@@ -29,15 +35,14 @@ RUN pip install -U pip && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    mkdir aiohttp && \
+    git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
-    aiohttp="$(curl -s https://pypi.org/pypi/aiohttp/json | jq -r '.info.version')" && \
-    wget "https://github.com/aio-libs/aiohttp/archive/v$aiohttp.tar.gz" && \
-    tar -xvzf "v$aiohttp.tar.gz" && \
-    cd "aiohttp-$aiohttp" && \
-    pip wheel . && \
+    git submodule update --init --recursive && \
+    echo "cython==3.0a0" > requirements/cython.txt && \
+    make cythonize && \
+    pip wheel .[speedups] && \
     pip install *.whl && \
-    cd ../.. && \
+    cd .. && \
     git clone https://github.com/giampaolo/psutil && \
     cd psutil && \
     pip wheel . && \
@@ -51,23 +56,23 @@ RUN pip install -U pip && \
     git clone https://github.com/Rapptz/discord.py && \
     cd discord.py && \
     git pull origin pull/1849/merge --no-edit && \
-    pip wheel . && \
-    pip install *.whl && \
+    pip wheel . --no-deps && \
+    pip install --no-deps *.whl && \
     cd .. && \
     git clone https://github.com/PythonistaGuild/Wavelink && \
     cd Wavelink && \
     pip wheel . --no-deps && \
-    pip install *.whl && \
+    pip install --no-deps *.whl && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/aiowiki && \
     cd aiowiki && \
-    pip wheel . && \
-    pip install *.whl && \
+    pip wheel . --no-deps && \
+    pip install --no-deps *.whl && \
     cd .. && \
     git clone https://github.com/Diniboy1123/raven-aiohttp && \
     cd raven-aiohttp && \
-    pip wheel . && \
-    pip install *.whl && \
+    pip wheel . --no-deps && \
+    pip install --no-deps *.whl && \
     cd .. && \
     git clone https://git.travitia.xyz/Adrian/fantasy-names && \
     cd fantasy-names && \
