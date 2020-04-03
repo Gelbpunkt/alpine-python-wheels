@@ -21,7 +21,6 @@ RUN pip install -U pip && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
-    git pull origin pull/327/merge --no-edit && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -61,6 +60,7 @@ RUN pip install -U pip && \
     cd .. && \
     git clone https://github.com/PythonistaGuild/Wavelink && \
     cd Wavelink && \
+    sed -i 's/aiohttp.ClientSession(loop=self.loop)/aiohttp.ClientSession()/' wavelink/client.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
