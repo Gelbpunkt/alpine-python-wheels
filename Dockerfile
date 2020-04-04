@@ -61,6 +61,7 @@ RUN pip install -U pip && \
     git clone https://github.com/PythonistaGuild/Wavelink && \
     cd Wavelink && \
     sed -i 's/aiohttp.ClientSession(loop=self.loop)/aiohttp.ClientSession()/' wavelink/client.py && \
+    sed -i '85d' wavelink/websocket.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
