@@ -3,7 +3,7 @@ FROM gelbpunkt/python:latest
 WORKDIR /build
 
 RUN pip install -U pip && \
-    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf jq curl libffi-dev && \
+    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf libffi-dev && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/cython/cython && \
