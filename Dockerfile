@@ -3,7 +3,7 @@ FROM gelbpunkt/python:latest
 WORKDIR /build
 
 RUN pip install -U pip && \
-    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf libffi-dev && \
+    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf jq curl libffi-dev && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/cython/cython && \
@@ -55,6 +55,7 @@ RUN pip install -U pip && \
     git clone https://github.com/Rapptz/discord.py && \
     cd discord.py && \
     git pull origin pull/1849/merge --no-edit && \
+    git pull origin pull/1497/merge --no-edit && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
@@ -100,6 +101,11 @@ RUN pip install -U pip && \
     cd .. && \
     git clone https://github.com/hellysmile/contextvars_executor && \
     cd contextvars_executor && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/Gelbpunkt/duckpy && \
+    cd duckpy && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
