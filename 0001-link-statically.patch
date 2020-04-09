@@ -1,0 +1,74 @@
+From cc232f85e73ca0c1e9e55efe5495b08734b598ef Mon Sep 17 00:00:00 2001
+From: Jens Reidel <jens@troet.org>
+Date: Thu, 9 Apr 2020 19:00:07 +0200
+Subject: [PATCH] link statically
+
+---
+ setup.py | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index 3e1a812b..656c1f32 100755
+--- a/setup.py
++++ b/setup.py
+@@ -735,7 +735,7 @@ class pil_build_ext(build_ext):
+         else:
+             defs.append(("PILLOW_VERSION", '"%s"' % PILLOW_VERSION))
+ 
+-        exts = [(Extension("PIL._imaging", files, libraries=libs, define_macros=defs))]
++        exts = [(Extension("PIL._imaging", files, libraries=libs, define_macros=defs, extra_link_args=['-static']))]
+ 
+         #
+         # additional libraries
+@@ -749,6 +749,7 @@ class pil_build_ext(build_ext):
+                     ["src/_imagingft.c"],
+                     libraries=libs,
+                     define_macros=defs,
++                    extra_link_args=['-static']
+                 )
+             )
+ 
+@@ -761,6 +762,7 @@ class pil_build_ext(build_ext):
+                     "PIL._imagingcms",
+                     ["src/_imagingcms.c"],
+                     libraries=[feature.lcms] + extra,
++                    extra_link_args=['-static']
+                 )
+             )
+ 
+@@ -775,7 +777,7 @@ class pil_build_ext(build_ext):
+ 
+             exts.append(
+                 Extension(
+-                    "PIL._webp", ["src/_webp.c"], libraries=libs, define_macros=defs
++                    "PIL._webp", ["src/_webp.c"], libraries=libs, define_macros=defs, extra_link_args=['-static']
+                 )
+             )
+ 
+@@ -786,11 +788,12 @@ class pil_build_ext(build_ext):
+                 ["src/_imagingtk.c", "src/Tk/tkImaging.c"],
+                 include_dirs=["src/Tk"],
+                 libraries=tk_libs,
++                extra_link_args=['-static']
+             )
+         )
+ 
+-        exts.append(Extension("PIL._imagingmath", ["src/_imagingmath.c"]))
+-        exts.append(Extension("PIL._imagingmorph", ["src/_imagingmorph.c"]))
++        exts.append(Extension("PIL._imagingmath", ["src/_imagingmath.c"], extra_link_args=['-static']))
++        exts.append(Extension("PIL._imagingmorph", ["src/_imagingmorph.c"], extra_link_args=['-static']))
+ 
+         self.extensions[:] = exts
+ 
+@@ -891,7 +894,7 @@ try:
+         ],
+         python_requires=">=3.5",
+         cmdclass={"build_ext": pil_build_ext},
+-        ext_modules=[Extension("PIL._imaging", ["_imaging.c"])],
++        ext_modules=[Extension("PIL._imaging", ["_imaging.c"], extra_link_args=['-static'])],
+         include_package_data=True,
+         packages=["PIL"],
+         package_dir={"": "src"},
+-- 
+2.25.2
+
