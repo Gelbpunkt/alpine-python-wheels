@@ -2,24 +2,10 @@ FROM gelbpunkt/python:latest
 
 WORKDIR /build
 
-COPY 0001-link-statically.patch .
-
 RUN pip install -U pip && \
     apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf jq curl libffi-dev zlib-dev jpeg-dev && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
-    git clone https://github.com/python-pillow/Pillow && \
-    cd Pillow && \
-    git am < /build/0001-link-statically.patch && \
-    pip wheel . && \
-    pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/Kozea/CairoSVG && \
-    cd CairoSVG && \
-    sed -i '49d' setup.cfg && \
-    pip wheel . && \
-    pip install *.whl && \
-    cd .. && \
     git clone https://github.com/niklasf/python-chess && \
     cd python-chess && \
     pip wheel . && \
