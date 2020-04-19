@@ -7,6 +7,14 @@ RUN pip install -U pip && \
     apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.11/main libffi-dev && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
+    git clone https://github.com/astanin/python-tabulate && \
+    cd python-tabulate && \
+    pip wheel . && \
+    cd .. && \
+    git clone https://github.com/iomintz/import-expression-parser && \
+    cd import-expression-parser && \
+    pip wheel . && \
+    cd .. && \
     git clone https://github.com/niklasf/python-chess && \
     cd python-chess && \
     pip wheel . && \
@@ -25,7 +33,7 @@ RUN pip install -U pip && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:0.29.14:3.0a1:g" setup.py && \
+    sed -i "s:0.29.14:3.0a2:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -43,7 +51,7 @@ RUN pip install -U pip && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
-    echo "cython==3.0a1" > requirements/cython.txt && \
+    echo "cython==3.0a2" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
     pip install *.whl && \
@@ -78,10 +86,6 @@ RUN pip install -U pip && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
-    git clone https://github.com/getsentry/raven-python && \
-    cd raven-python && \
-    pip wheel . --no-deps && \
-    pip install --no-deps *.whl && \
     git clone https://github.com/Diniboy1123/raven-aiohttp && \
     cd raven-aiohttp && \
     pip wheel . --no-deps && \
@@ -117,8 +121,8 @@ RUN pip install -U pip && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/duckpy && \
     cd duckpy && \
-    pip wheel . --no-deps && \
-    pip install *.whl --no-deps && \
+    pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     apk del .build-deps
 
