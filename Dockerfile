@@ -121,8 +121,8 @@ RUN apk upgrade --no-cache && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/duckpy && \
     cd duckpy && \
-    pip wheel . && \
-    pip install *.whl && \
+    pip wheel . --no-deps && \
+    pip install *.whl --no-deps && \
     cd .. && \
     apk del .build-deps
 
