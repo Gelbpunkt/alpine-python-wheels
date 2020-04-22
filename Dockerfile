@@ -3,7 +3,7 @@ FROM gelbpunkt/python:latest
 WORKDIR /build
 
 RUN apk upgrade --no-cache && \
-    apk add --no-cache --virtual .build-deps --repository https://ftp.travitia.xyz/alpine --allow-untrusted git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl && \
+    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl && \
     apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.11/main libffi-dev && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
