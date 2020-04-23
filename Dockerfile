@@ -22,7 +22,7 @@ RUN apk upgrade --no-cache && \
     cd .. && \
     git clone https://github.com/aaugustin/websockets && \
     cd websockets && \
-    pip wheel ".[websockets.speedups]" && \
+    pip wheel . && \
     pip install *.whl && \
     cd .. && \
     git clone https://github.com/cython/cython && \
@@ -44,12 +44,6 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone https://github.com/aio-libs/aioredis && \
-    cd aioredis && \
-    sed "s:'async-timeout'::g" -i setup.py && \
-    pip wheel . && \
-    pip install *.whl && \
-    cd .. && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
@@ -58,6 +52,10 @@ RUN apk upgrade --no-cache && \
     pip wheel .[speedups] && \
     pip install *.whl && \
     cd .. && \
+    git clone https://github.com/aio-libs/aioredis && \
+    cd aioredis && \
+    pip wheel . && \
+    pip install *.whl && \
     git clone https://github.com/giampaolo/psutil && \
     cd psutil && \
     pip wheel . && \
@@ -87,6 +85,11 @@ RUN apk upgrade --no-cache && \
     cd aiowiki && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
+    cd .. && \
+    git clone https://github.com/getsentry/raven-python && \
+    cd raven-python && \
+    pip wheel . && \
+    pip install *.whl && \
     cd .. && \
     git clone https://github.com/Diniboy1123/raven-aiohttp && \
     cd raven-aiohttp && \
