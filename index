@@ -11,8 +11,10 @@ cchardet-2.1.6-cp39-cp39-linux_x86_64.whl
 cffi-1.14.0-cp39-cp39-linux_x86_64.whl
 chardet-3.0.4-py2.py3-none-any.whl
 contextvars_executor-0.0.1-py3-none-any.whl
+Cython-0.29.16-cp39-cp39-linux_x86_64.whl
 Cython-3.0a2-cp39-cp39-linux_x86_64.whl
 dateparser-0.7.4-py2.py3-none-any.whl
+discord.py-1.4.0a2496+g52e0f4d-py3-none-any.whl
 discord.py-1.4.0a2496+gcebc7c3-py3-none-any.whl
 discord.py-1.4.0a2496+gdf93fdd-py3-none-any.whl
 distro-1.5.0-py2.py3-none-any.whl
@@ -20,11 +22,13 @@ duckpy-2.1.1-py3-none-any.whl
 fantasy_names-1.0.0-py3-none-any.whl
 hiredis-1.0.1-cp39-cp39-linux_x86_64.whl
 humanize-2.3.0-py3-none-any.whl
+humanize-2.4.0-py3-none-any.whl
 idna-2.9-py2.py3-none-any.whl
 import_expression-1.0.0-py3-none-any.whl
 multidict-4.7.5-cp39-cp39-linux_x86_64.whl
 ply-0.0.0-cp39-cp39-linux_x86_64.whl
 psutil-5.7.0-cp39-cp39-linux_x86_64.whl
+psutil-5.7.1-cp39-cp39-linux_x86_64.whl
 pycares-3.1.1-cp39-cp39-linux_x86_64.whl
 pycparser-2.20-py2.py3-none-any.whl
 python_chess-0.31.0-py3-none-any.whl
