@@ -3,8 +3,7 @@ FROM gelbpunkt/python:gcc10
 WORKDIR /build
 
 RUN apk upgrade --no-cache && \
-    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl && \
-    apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.11/main libffi-dev && \
+    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/astanin/python-tabulate && \
@@ -27,14 +26,14 @@ RUN apk upgrade --no-cache && \
     cd .. && \
     git clone https://github.com/cython/cython && \
     cd cython && \
-    git checkout release && \
+    git pull origin pull/3546/merge --no-edit && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:0.29.14:0.29.16:g" setup.py && \
+    sed -i "s:0.29.14:3.0a2:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -47,7 +46,7 @@ RUN apk upgrade --no-cache && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
-    echo "cython==0.29.16" > requirements/cython.txt && \
+    echo "cython==3.0a2" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
     pip install *.whl && \
