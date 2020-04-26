@@ -18,6 +18,7 @@ Cython-0.29.16-cp39-cp39-linux_x86_64.whl
 Cython-3.0a2-cp39-cp39-linux_x86_64.whl
 dateparser-0.7.4-py2.py3-none-any.whl
 discord.py-1.4.0a2496+g386c3e0-py3-none-any.whl
+discord.py-1.4.0a2496+g4a411ff-py3-none-any.whl
 discord.py-1.4.0a2496+g52e0f4d-py3-none-any.whl
 discord.py-1.4.0a2496+g711cdf1-py3-none-any.whl
 discord.py-1.4.0a2496+g9ae25ae-py3-none-any.whl
@@ -49,6 +50,7 @@ typing_extensions-3.7.4.2-py3-none-any.whl
 tzlocal-2.0.0-py2.py3-none-any.whl
 uvloop-0.15.0.dev0-cp39-cp39-linux_x86_64.whl
 wavelink-0.6.0-py3-none-any.whl
+wavelink-0.6.1-py3-none-any.whl
 websockets-8.1-cp39-cp39-linux_x86_64.whl
 wheel-0.34.2-py2.py3-none-any.whl
 yarl-1.4.2-cp39-cp39-linux_x86_64.whl
