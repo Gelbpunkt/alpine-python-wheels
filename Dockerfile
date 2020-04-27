@@ -26,7 +26,6 @@ RUN apk upgrade --no-cache && \
     cd .. && \
     git clone https://github.com/cython/cython && \
     cd cython && \
-    git pull origin pull/3546/merge --no-edit && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
