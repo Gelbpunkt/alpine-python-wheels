@@ -2,6 +2,8 @@ FROM gelbpunkt/python:gcc10
 
 WORKDIR /build
 
+ENV MAKEFLAGS "-j $(nproc)"
+
 RUN apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
     git config --global user.name "Jens Reidel" && \
@@ -32,7 +34,7 @@ RUN apk upgrade --no-cache && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:0.29.14:3.0a2:g" setup.py && \
+    sed -i "s:0.29.14:3.0a3:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -45,7 +47,7 @@ RUN apk upgrade --no-cache && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
-    echo "cython==3.0a2" > requirements/cython.txt && \
+    echo "cython==3.0a3" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
     pip install *.whl && \
