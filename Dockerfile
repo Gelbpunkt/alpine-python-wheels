@@ -31,6 +31,7 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
+    apk add --no-cache libstdc++~9.3 libgcc~9.3 gcc~9.3 && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
@@ -38,6 +39,7 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
+    apk add --no-cache "libstdc++>=10" "libgcc>=10" "g++>=10" "gcc>=10" && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
