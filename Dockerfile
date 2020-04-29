@@ -56,6 +56,7 @@ RUN apk upgrade --no-cache && \
     cd aioredis && \
     pip wheel . && \
     pip install *.whl && \
+    cd .. && \
     git clone https://github.com/giampaolo/psutil && \
     cd psutil && \
     pip wheel . && \
