@@ -125,8 +125,8 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone https://github.com/Gelbpunkt/duckpy && \
-    cd duckpy && \
+    git clone https://github.com/Gelbpunkt/LyricsGenius && \
+    cd LyricsGenius && \
     pip wheel . --no-deps && \
     pip install *.whl --no-deps && \
     cd .. && \
