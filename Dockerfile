@@ -126,13 +126,7 @@ RUN apk upgrade --no-cache && \
     cd contextvars_executor && \
     pip wheel . && \
     pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/Gelbpunkt/LyricsGenius && \
-    cd LyricsGenius && \
-    pip wheel . --no-deps && \
-    pip install *.whl --no-deps && \
-    cd .. && \
-    apk del .build-deps
+    cd ..
 
 # allow for build caching
 RUN mkdir /wheels && \
