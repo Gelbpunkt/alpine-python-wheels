@@ -39,7 +39,7 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    apk add --no-cache "libstdc++>=10" "libgcc>=10" "g++>=10" "gcc>=10" && \
+    apk add --no-cache "libstdc++>=11" "libgcc>=11" "g++>=11" "gcc>=11" && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
