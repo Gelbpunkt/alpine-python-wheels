@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+rm wheels/*
 podman build -t wheels:latest . --no-cache
 podman run -d --rm --name wheels wheels:latest
 podman cp --pause=false wheels:/wheels/ .

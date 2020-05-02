@@ -33,7 +33,6 @@ RUN apk upgrade --no-cache && \
     cd .. && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
-    git pull origin pull/566/merge --no-edit && \
     git submodule update --init --recursive && \
     sed -i "s:0.29.14:3.0a3:g" setup.py && \
     pip wheel . && \
