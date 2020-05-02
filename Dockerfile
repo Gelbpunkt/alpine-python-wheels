@@ -31,15 +31,14 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    apk add --no-cache libstdc++~9.3 libgcc~9.3 gcc~9.3 && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
+    git pull origin pull/566/merge --no-edit && \
     git submodule update --init --recursive && \
     sed -i "s:0.29.14:3.0a3:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    apk add --no-cache "libstdc++>=11" "libgcc>=11" "g++>=11" "gcc>=11" && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
