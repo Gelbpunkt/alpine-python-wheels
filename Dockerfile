@@ -21,11 +21,6 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone https://github.com/aaugustin/websockets && \
-    cd websockets && \
-    pip wheel . && \
-    pip install *.whl && \
-    cd .. && \
     git clone https://github.com/cython/cython && \
     cd cython && \
     pip wheel . && \
@@ -77,8 +72,9 @@ RUN apk upgrade --no-cache && \
     cd .. && \
     git clone https://github.com/PythonistaGuild/Wavelink && \
     cd Wavelink && \
+    git pull origin pull/53/merge --no-edit && \
     sed -i 's/aiohttp.ClientSession(loop=self.loop)/aiohttp.ClientSession()/' wavelink/client.py && \
-    sed -i '85d' wavelink/websocket.py && \
+    sed -i '88d' wavelink/websocket.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
