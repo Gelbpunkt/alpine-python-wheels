@@ -29,7 +29,7 @@ RUN apk upgrade --no-cache && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:0.29.14:3.0a3:g" setup.py && \
+    sed -i "s:0.29.14:3.0a4:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -42,7 +42,7 @@ RUN apk upgrade --no-cache && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
-    echo "cython==3.0a3" > requirements/cython.txt && \
+    echo "cython==3.0a4" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
     pip install *.whl && \
