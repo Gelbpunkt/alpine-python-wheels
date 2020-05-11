@@ -68,8 +68,10 @@ RUN set -ex && \
     cd .. && \
     git clone --single-branch -b sharding-rework https://github.com/Rapptz/discord.py && \
     cd discord.py && \
-    git pull origin pull/1849/merge --no-edit -s recursive -X theirs && \
-    git pull origin pull/1497/merge --no-edit && \
+    curl https://github.com/Rapptz/discord.py/compare/master...khazhyk:rfc-param-default.patch -L -o param-default.patch && \
+    git am -3 param-default.patch && \
+    curl https://github.com/Rapptz/discord.py/compare/master...bryanforbes:typings.patch -L -o typings.patch && \
+    echo "Skipping git am -3 typings.patch as branch is outdated." && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
