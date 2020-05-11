@@ -2,9 +2,10 @@ FROM gelbpunkt/python:gcc10
 
 WORKDIR /build
 
-ENV MAKEFLAGS "-j $(nproc)"
+ENV MAKEFLAGS "-j 8"
 
-RUN apk upgrade --no-cache && \
+RUN set -ex && \
+    apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
@@ -25,7 +26,7 @@ RUN apk upgrade --no-cache && \
     cd cython && \
     pip wheel . && \
     pip install *.whl && \
-    CYTHON_VERSION=$(pip3 show cython | grep "Version" | cut -d' ' -f 2) && \
+    CYTHON_VERSION=$(pip show cython | grep "Version" | cut -d' ' -f 2) && \
     cd .. && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
@@ -47,9 +48,11 @@ RUN apk upgrade --no-cache && \
     make cythonize && \
     pip wheel .[speedups] && \
     pip install *.whl && \
+    TIMEOUT_VERSION=$(pip show async_timeout | grep "Version" | cut -d' ' -f 2) && \
     cd .. && \
     git clone https://github.com/aio-libs/aioredis && \
     cd aioredis && \
+    sed -i "s:async-timeout:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -63,10 +66,9 @@ RUN apk upgrade --no-cache && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone https://github.com/Rapptz/discord.py && \
+    git clone --single-branch -b sharding-rework https://github.com/Rapptz/discord.py && \
     cd discord.py && \
-    git checkout sharding-rework && \
-    git pull origin pull/1849/merge --no-edit && \
+    git pull origin pull/1849/merge --no-edit -s recursive -X ours && \
     git pull origin pull/1497/merge --no-edit && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
