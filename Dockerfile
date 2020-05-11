@@ -68,7 +68,7 @@ RUN set -ex && \
     cd .. && \
     git clone --single-branch -b sharding-rework https://github.com/Rapptz/discord.py && \
     cd discord.py && \
-    git pull origin pull/1849/merge --no-edit -s recursive -X ours && \
+    git pull origin pull/1849/merge --no-edit -s recursive -X theirs && \
     git pull origin pull/1497/merge --no-edit && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
