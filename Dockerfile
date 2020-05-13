@@ -75,9 +75,9 @@ RUN set -ex && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
-    git clone https://github.com/PythonistaGuild/Wavelink && \
+    git clone https://github.com/Gelbpunkt/Wavelink && \
     cd Wavelink && \
-    git pull origin pull/53/merge --no-edit && \
+    git checkout patched && \
     sed -i 's/aiohttp.ClientSession(loop=self.loop)/aiohttp.ClientSession()/' wavelink/client.py && \
     sed -i '88d' wavelink/websocket.py && \
     pip wheel . --no-deps && \

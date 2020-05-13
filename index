@@ -13,7 +13,7 @@ cffi-1.14.0-cp39-cp39-linux_x86_64.whl
 chardet-3.0.4-py2.py3-none-any.whl
 contextvars_executor-0.0.1-py3-none-any.whl
 dateparser-0.7.4-py2.py3-none-any.whl
-discord.py-1.4.0a2327+gbc12bf9-py3-none-any.whl
+discord.py-1.4.0a2327+g95069b5-py3-none-any.whl
 distro-1.5.0-py2.py3-none-any.whl
 fantasy_names-1.0.0-py3-none-any.whl
 hiredis-1.0.1-cp39-cp39-linux_x86_64.whl
@@ -30,7 +30,7 @@ python_dateutil-2.8.1-py2.py3-none-any.whl
 pytz-2020.1-py2.py3-none-any.whl
 raven-6.10.0-py2.py3-none-any.whl
 raven_aiohttp-0.7.0-py2.py3-none-any.whl
-regex-2020.5.7-cp39-cp39-linux_x86_64.whl
+regex-2020.5.13-cp39-cp39-linux_x86_64.whl
 six-1.14.0-py2.py3-none-any.whl
 tabulate-0.8.8-py3-none-any.whl
 typing_extensions-3.7.4.2-py3-none-any.whl
