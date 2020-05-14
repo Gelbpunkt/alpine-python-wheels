@@ -63,6 +63,9 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/scrapinghub/dateparser && \
     cd dateparser && \
+    git pull origin pull/531/merge --no-edit && \
+    git pull origin pull/562/merge --no-edit && \
+    git pull origin pull/477/merge --no-edit -s recursive -X ours && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
