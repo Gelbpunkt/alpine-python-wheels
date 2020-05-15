@@ -4,6 +4,8 @@ WORKDIR /build
 
 ENV MAKEFLAGS "-j 8"
 
+COPY 0001-Patch-677-ugly.patch /tmp/
+
 RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
@@ -66,6 +68,7 @@ RUN set -ex && \
     git pull origin pull/531/merge --no-edit && \
     git pull origin pull/562/merge --no-edit && \
     git pull origin pull/477/merge --no-edit -s recursive -X ours && \
+    git am -3 /tmp/0001-Patch-677-ugly.patch && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
