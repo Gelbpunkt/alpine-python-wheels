@@ -77,7 +77,7 @@ RUN set -ex && \
     curl https://github.com/Rapptz/discord.py/compare/master...khazhyk:rfc-param-default.patch -L -o param-default.patch && \
     git am -3 param-default.patch && \
     curl https://github.com/Rapptz/discord.py/compare/master...bryanforbes:typings.patch -L -o typings.patch && \
-    echo "Skipping git am -3 typings.patch as branch is outdated." && \
+    # git am -3 typings.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
