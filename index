@@ -1,5 +1,5 @@
 Brotli-1.0.7-cp39-cp39-linux_x86_64.whl
-Cython-3.0a4-cp39-cp39-linux_x86_64.whl
+Cython-3.0a5-cp39-cp39-linux_x86_64.whl
 aiodns-2.0.0-py2.py3-none-any.whl
 aiohttp-4.0.0a1-cp39-cp39-linux_x86_64.whl
 aioredis-1.3.1-py3-none-any.whl
@@ -13,7 +13,7 @@ cffi-1.14.0-cp39-cp39-linux_x86_64.whl
 chardet-3.0.4-py2.py3-none-any.whl
 contextvars_executor-0.0.1-py3-none-any.whl
 dateparser-0.7.4-py2.py3-none-any.whl
-discord.py-1.4.0a2327+g83d8d1d-py3-none-any.whl
+discord.py-1.4.0a2327+g54bebe9-py3-none-any.whl
 distro-1.5.0-py2.py3-none-any.whl
 fantasy_names-1.0.0-py3-none-any.whl
 hiredis-1.0.1-cp39-cp39-linux_x86_64.whl
@@ -31,7 +31,7 @@ pytz-2020.1-py2.py3-none-any.whl
 raven-6.10.0-py2.py3-none-any.whl
 raven_aiohttp-0.7.0-py2.py3-none-any.whl
 regex-2020.5.14-cp39-cp39-linux_x86_64.whl
-six-1.14.0-py2.py3-none-any.whl
+six-1.15.0-py2.py3-none-any.whl
 tabulate-0.8.8-py3-none-any.whl
 typing_extensions-3.7.4.2-py3-none-any.whl
 tzlocal-2.1-py2.py3-none-any.whl
