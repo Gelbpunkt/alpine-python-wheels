@@ -53,6 +53,7 @@ RUN set -ex && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
+    git pull origin pull/4483/merge --no-edit && \
     echo "cython==$CYTHON_VERSION" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
@@ -101,15 +102,10 @@ RUN set -ex && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
-    git clone https://github.com/getsentry/raven-python && \
-    cd raven-python && \
+    git clone https://github.com/getsentry/sentry-python && \
+    cd sentry-python && \
     pip wheel . && \
     pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/Diniboy1123/raven-aiohttp && \
-    cd raven-aiohttp && \
-    pip wheel . --no-deps && \
-    pip install --no-deps *.whl && \
     cd .. && \
     git clone https://git.travitia.xyz/Adrian/fantasy-names && \
     cd fantasy-names && \
