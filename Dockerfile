@@ -8,9 +8,16 @@ COPY 0001-Patch-677-ugly.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
-    apk add --no-cache --virtual .build-deps git gcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
+    apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
+    curl https://sh.rustup.rs -o rustup.sh && \
+    ash rustup.sh -y --default-toolchain nightly && \
+    source $HOME/.cargo/env && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
+    git clone https://github.com/ijl/orjson && \
+    cd orjson && \
+    pip wheel . && \
+    cd .. && \
     git clone https://github.com/astanin/python-tabulate && \
     cd python-tabulate && \
     pip wheel . && \
