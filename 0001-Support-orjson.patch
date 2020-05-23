@@ -1,0 +1,53 @@
+From 07975fec2ef90ff1de283853f6cee93648a5ec69 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <jens@troet.org>
+Date: Sat, 23 May 2020 18:07:03 +0200
+Subject: [PATCH] Support orjson
+
+---
+ discord/gateway.py | 2 +-
+ discord/http.py    | 2 +-
+ discord/utils.py   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/discord/gateway.py b/discord/gateway.py
+index 89f4e0b..9cfa33a 100644
+--- a/discord/gateway.py
++++ b/discord/gateway.py
+@@ -526,7 +526,7 @@ class DiscordWebSocket:
+ 
+     async def send(self, data):
+         self._dispatch('socket_raw_send', data)
+-        await self.socket.send_str(data)
++        await self.socket.send_bytes(data)
+ 
+     async def send_as_json(self, data):
+         try:
+diff --git a/discord/http.py b/discord/http.py
+index b978962..7d68004 100644
+--- a/discord/http.py
++++ b/discord/http.py
+@@ -120,7 +120,7 @@ class HTTPClient:
+             'proxy_auth': self.proxy_auth,
+             'proxy': self.proxy,
+             'max_msg_size': 0,
+-            'timeout': 30.0,
++            'timeout': aiohttp.client_ws.ClientWSTimeout(ws_close=30.0),
+             'autoclose': False,
+             'headers': {
+                 'User-Agent': self.user_agent,
+diff --git a/discord/utils.py b/discord/utils.py
+index 46f35bd..df42c50 100644
+--- a/discord/utils.py
++++ b/discord/utils.py
+@@ -301,7 +301,7 @@ def _bytes_to_base64_data(data):
+     return fmt.format(mime=mime, data=b64)
+ 
+ def to_json(obj):
+-    return json.dumps(obj, separators=(',', ':'), ensure_ascii=True)
++    return json.dumps(obj)
+ 
+ def _parse_ratelimit_header(request, *, use_clock=False):
+     reset_after = request.headers.get('X-Ratelimit-Reset-After')
+-- 
+2.26.2
+

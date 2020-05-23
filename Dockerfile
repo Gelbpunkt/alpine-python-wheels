@@ -5,6 +5,7 @@ WORKDIR /build
 ENV MAKEFLAGS "-j 8"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
+COPY 0001-Support-orjson.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
@@ -86,6 +87,7 @@ RUN set -ex && \
     git am -3 param-default.patch && \
     curl https://github.com/Rapptz/discord.py/compare/master...bryanforbes:typings.patch -L -o typings.patch && \
     # git am -3 typings.patch && \
+    git am -3 /tmp/0001-Support-orjson.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
