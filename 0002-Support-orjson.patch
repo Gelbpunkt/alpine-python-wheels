@@ -1,0 +1,57 @@
+From 6c45a8ddb8048e7ed710d1e764371185773866fa Mon Sep 17 00:00:00 2001
+From: Jens Reidel <jens@troet.org>
+Date: Sat, 23 May 2020 20:26:34 +0200
+Subject: [PATCH] Support orjson
+
+---
+ sentry_sdk/envelope.py  | 6 +++---
+ sentry_sdk/transport.py | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/sentry_sdk/envelope.py b/sentry_sdk/envelope.py
+index 701b84a..4f7b828 100644
+--- a/sentry_sdk/envelope.py
++++ b/sentry_sdk/envelope.py
+@@ -86,7 +86,7 @@ class Envelope(object):
+         self, f  # type: Any
+     ):
+         # type: (...) -> None
+-        f.write(json.dumps(self.headers, allow_nan=False).encode("utf-8"))
++        f.write(json.dumps(self.headers))
+         f.write(b"\n")
+         for item in self.items:
+             item.serialize_into(f)
+@@ -142,7 +142,7 @@ class PayloadRef(object):
+                 with open(self.path, "rb") as f:
+                     self.bytes = f.read()
+             elif self.json is not None:
+-                self.bytes = json.dumps(self.json, allow_nan=False).encode("utf-8")
++                self.bytes = json.dumps(self.json)
+             else:
+                 self.bytes = b""
+         return self.bytes
+@@ -256,7 +256,7 @@ class Item(object):
+         headers = dict(self.headers)
+         length, writer = self.payload._prepare_serialize()
+         headers["length"] = length
+-        f.write(json.dumps(headers, allow_nan=False).encode("utf-8"))
++        f.write(json.dumps(headers))
+         f.write(b"\n")
+         writer(f)
+         f.write(b"\n")
+diff --git a/sentry_sdk/transport.py b/sentry_sdk/transport.py
+index c6f926a..4c1a403 100644
+--- a/sentry_sdk/transport.py
++++ b/sentry_sdk/transport.py
+@@ -210,7 +210,7 @@ class HttpTransport(Transport):
+ 
+         body = io.BytesIO()
+         with gzip.GzipFile(fileobj=body, mode="w") as f:
+-            f.write(json.dumps(event, allow_nan=False).encode("utf-8"))
++            f.write(json.dumps(event))
+ 
+         assert self.parsed_dsn is not None
+         logger.debug(
+-- 
+2.26.2
+

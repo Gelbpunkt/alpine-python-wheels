@@ -6,6 +6,7 @@ ENV MAKEFLAGS "-j 8"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0001-Support-orjson.patch /tmp/
+COPY 0002-Support-orjson.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
@@ -106,6 +107,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/getsentry/sentry-python && \
     cd sentry-python && \
+    git am -3 /tmp/0002-Support-orjson.patch && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
