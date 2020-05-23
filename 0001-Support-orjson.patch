@@ -1,16 +1,16 @@
-From 07975fec2ef90ff1de283853f6cee93648a5ec69 Mon Sep 17 00:00:00 2001
+From dcc78274a03a1e55c20e7908513700afc9cb095a Mon Sep 17 00:00:00 2001
 From: Jens Reidel <jens@troet.org>
-Date: Sat, 23 May 2020 18:07:03 +0200
-Subject: [PATCH] Support orjson
+Date: Sat, 23 May 2020 22:51:24 +0200
+Subject: [PATCH] support orjson
 
 ---
- discord/gateway.py | 2 +-
- discord/http.py    | 2 +-
+ discord/gateway.py | 4 ++--
+ discord/http.py    | 4 ++--
  discord/utils.py   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/discord/gateway.py b/discord/gateway.py
-index 89f4e0b..9cfa33a 100644
+index 89f4e0b..b8d0bcb 100644
 --- a/discord/gateway.py
 +++ b/discord/gateway.py
 @@ -526,7 +526,7 @@ class DiscordWebSocket:
@@ -22,8 +22,17 @@ index 89f4e0b..9cfa33a 100644
  
      async def send_as_json(self, data):
          try:
+@@ -648,7 +648,7 @@ class DiscordVoiceWebSocket:
+ 
+     async def send_as_json(self, data):
+         log.debug('Sending voice websocket frame: %s.', data)
+-        await self.ws.send_str(utils.to_json(data))
++        await self.ws.send_bytes(utils.to_json(data))
+ 
+     async def resume(self):
+         state = self._connection
 diff --git a/discord/http.py b/discord/http.py
-index b978962..7d68004 100644
+index b978962..f8d4c0e 100644
 --- a/discord/http.py
 +++ b/discord/http.py
 @@ -120,7 +120,7 @@ class HTTPClient:
@@ -35,6 +44,15 @@ index b978962..7d68004 100644
              'autoclose': False,
              'headers': {
                  'User-Agent': self.user_agent,
+@@ -374,7 +374,7 @@ class HTTPClient:
+         if allowed_mentions:
+             payload['allowed_mentions'] = allowed_mentions
+ 
+-        form.add_field('payload_json', utils.to_json(payload))
++        form.add_field('payload_json', utils.to_json(payload).decode("utf-8"))
+         if len(files) == 1:
+             file = files[0]
+             form.add_field('file', file.fp, filename=file.filename, content_type='application/octet-stream')
 diff --git a/discord/utils.py b/discord/utils.py
 index 46f35bd..df42c50 100644
 --- a/discord/utils.py
