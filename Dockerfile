@@ -87,7 +87,7 @@ RUN set -ex && \
     curl https://github.com/Rapptz/discord.py/compare/master...khazhyk:rfc-param-default.patch -L -o param-default.patch && \
     git am -3 param-default.patch && \
     curl https://github.com/Rapptz/discord.py/compare/master...bryanforbes:typings.patch -L -o typings.patch && \
-    # git am -3 typings.patch && \
+    #git am -3 typings.patch && \
     git am -3 /tmp/0001-Support-orjson.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
