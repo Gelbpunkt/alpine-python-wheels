@@ -20,6 +20,10 @@ RUN set -ex && \
     cd orjson && \
     pip wheel . && \
     cd .. && \
+    git clone https://github.com/amitdev/lru-dict && \
+    cd lru-dict && \
+    pip wheel . && \
+    cd .. && \
     git clone https://github.com/astanin/python-tabulate && \
     cd python-tabulate && \
     pip wheel . && \
