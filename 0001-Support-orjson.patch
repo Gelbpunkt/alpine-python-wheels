@@ -1,23 +1,23 @@
-From 93c73f7532a332cf031c8827320bcb84daa6459b Mon Sep 17 00:00:00 2001
+From cb7b720f7099222212b8531fea30bfcc22a34911 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <jens@troet.org>
-Date: Sun, 24 May 2020 17:08:05 +0200
-Subject: [PATCH] Support orjson, custom intents, ratelimit warnings -> debug
+Date: Mon, 25 May 2020 15:21:40 +0200
+Subject: [PATCH] orjson and intents patch
 
 ---
  discord/gateway.py | 5 +++--
- discord/http.py    | 8 ++++----
+ discord/http.py    | 4 ++--
  discord/utils.py   | 2 +-
- 3 files changed, 8 insertions(+), 7 deletions(-)
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/discord/gateway.py b/discord/gateway.py
-index 89f4e0b..a61eb38 100644
+index 89f4e0b..dca1891 100644
 --- a/discord/gateway.py
 +++ b/discord/gateway.py
 @@ -317,6 +317,7 @@ class DiscordWebSocket:
          payload = {
              'op': self.IDENTIFY,
              'd': {
-+                'intents': 13953,
++                'intents': 13955,
                  'token': self.token,
                  'properties': {
                      '$os': sys.platform,
@@ -40,7 +40,7 @@ index 89f4e0b..a61eb38 100644
      async def resume(self):
          state = self._connection
 diff --git a/discord/http.py b/discord/http.py
-index b978962..00d5041 100644
+index b978962..f8d4c0e 100644
 --- a/discord/http.py
 +++ b/discord/http.py
 @@ -120,7 +120,7 @@ class HTTPClient:
@@ -52,21 +52,6 @@ index b978962..00d5041 100644
              'autoclose': False,
              'headers': {
                  'User-Agent': self.user_agent,
-@@ -211,12 +211,12 @@ class HTTPClient:
- 
-                             # sleep a bit
-                             retry_after = data['retry_after'] / 1000.0
--                            log.warning(fmt, retry_after, bucket)
-+                            log.debug(fmt, retry_after, bucket)
- 
-                             # check if it's a global rate limit
-                             is_global = data.get('global', False)
-                             if is_global:
--                                log.warning('Global rate limit has been hit. Retrying in %.2f seconds.', retry_after)
-+                                log.debug('Global rate limit has been hit. Retrying in %.2f seconds.', retry_after)
-                                 self._global_over.clear()
- 
-                             await asyncio.sleep(retry_after)
 @@ -374,7 +374,7 @@ class HTTPClient:
          if allowed_mentions:
              payload['allowed_mentions'] = allowed_mentions
