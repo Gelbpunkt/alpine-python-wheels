@@ -16,6 +16,7 @@ RUN set -ex && \
     source $HOME/.cargo/env && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
+    pip install -U git+https://github.com/pypa/wheel && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
     pip wheel . && \
