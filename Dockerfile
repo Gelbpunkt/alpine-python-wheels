@@ -1,4 +1,4 @@
-FROM gelbpunkt/python:gcc10
+FROM gelbpunkt/python:3.10
 
 WORKDIR /build
 
