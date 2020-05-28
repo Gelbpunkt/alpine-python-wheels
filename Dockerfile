@@ -1,4 +1,4 @@
-FROM gelbpunkt/python:gcc10
+FROM gelbpunkt/python:3.10
 
 WORKDIR /build
 
@@ -7,6 +7,7 @@ ENV MAKEFLAGS "-j 8"
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0001-Support-orjson.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
+COPY 0001-Python-3.10-compatibility.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
@@ -17,9 +18,16 @@ RUN set -ex && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     pip install -U git+https://github.com/pypa/wheel && \
+    git clone https://github.com/PyO3/maturin && \
+    cd maturin && \
+    git am -3 /tmp/0001-Python-3.10-compatibility.patch && \
+    pip wheel . && \
+    pip install *.whl && \
+    rm *.whl && \
+    cd .. && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    pip wheel . && \
+    maturin build --no-sdist --release --strip --manylinux off -i python && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
     cd lru-dict && \

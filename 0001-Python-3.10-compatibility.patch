@@ -1,0 +1,62 @@
+From 8777050ce3750378f7ce0d69d66b8a2f5e81a350 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <jens@troet.org>
+Date: Thu, 28 May 2020 11:53:47 +0200
+Subject: [PATCH] Python 3.10 compatibility
+
+---
+ setup.py                  | 2 +-
+ src/build_context.rs      | 2 +-
+ src/python_interpreter.rs | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index e3590d2..722afc2 100644
+--- a/setup.py
++++ b/setup.py
+@@ -90,7 +90,7 @@ setup(
+     version=version,
+     license="MIT OR Apache-2.0",
+     python_requires=">=3.5",
+-    cmdclass={"install": PostInstallCommand, "bdist_wheel": bdist_wheel},
++    cmdclass={"install": PostInstallCommand},
+     classifiers=[
+         "Topic :: Software Development :: Build Tools",
+         "Programming Language :: Rust",
+diff --git a/src/build_context.rs b/src/build_context.rs
+index c4ff4d2..98824d2 100644
+--- a/src/build_context.rs
++++ b/src/build_context.rs
+@@ -193,7 +193,7 @@ impl BuildContext {
+ 
+             wheels.push((
+                 wheel_path,
+-                format!("cp{}{}", python_interpreter.major, python_interpreter.minor),
++                format!("cp{}_{}", python_interpreter.major, python_interpreter.minor),
+                 Some(python_interpreter.clone()),
+             ));
+         }
+diff --git a/src/python_interpreter.rs b/src/python_interpreter.rs
+index e945abb..013459a 100644
+--- a/src/python_interpreter.rs
++++ b/src/python_interpreter.rs
+@@ -363,7 +363,7 @@ impl PythonInterpreter {
+                 let platform = self.target.get_platform_tag(manylinux);
+                 if self.target.is_unix() {
+                     format!(
+-                        "cp{major}{minor}-cp{major}{minor}{abiflags}-{platform}",
++                        "cp{major}_{minor}-cp{major}_{minor}{abiflags}-{platform}",
+                         major = self.major,
+                         minor = self.minor,
+                         abiflags = self.abiflags,
+@@ -371,7 +371,7 @@ impl PythonInterpreter {
+                     )
+                 } else {
+                     format!(
+-                        "cp{major}{minor}-none-{platform}",
++                        "cp{major}_{minor}-none-{platform}",
+                         major = self.major,
+                         minor = self.minor,
+                         platform = platform
+-- 
+2.26.2
+
