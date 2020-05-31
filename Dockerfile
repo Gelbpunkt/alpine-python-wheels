@@ -97,6 +97,11 @@ RUN set -ex && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
+    git clone https://github.com/Rapptz/discord-ext-menus && \
+    cd discord-ext-menus && \
+    pip wheel . --no-deps && \
+    pip install --no-deps *.whl && \
+    cd .. && \
     git clone https://github.com/Gelbpunkt/Wavelink && \
     cd Wavelink && \
     git checkout patched && \
