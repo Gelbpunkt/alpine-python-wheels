@@ -14,7 +14,7 @@ cffi-1.14.0-cp39-cp39-linux_x86_64.whl
 chardet-3.0.4-py2.py3-none-any.whl
 contextvars_executor-0.0.1-py3-none-any.whl
 dateparser-0.7.4-py2.py3-none-any.whl
-discord.py-1.4.0a2371+g1aa185d-py3-none-any.whl
+discord.py-1.4.0a2371+g047b0b6-py3-none-any.whl
 discord_ext_menus-1.0.0a21+gd9965ec-py3-none-any.whl
 distro-1.5.0-py2.py3-none-any.whl
 fantasy_names-1.0.0-py3-none-any.whl
@@ -32,7 +32,7 @@ pycparser-2.20-py2.py3-none-any.whl
 python_chess-0.31.2-py3-none-any.whl
 python_dateutil-2.8.1-py2.py3-none-any.whl
 pytz-2020.1-py2.py3-none-any.whl
-regex-2020.6.7-cp39-cp39-linux_x86_64.whl
+regex-2020.6.8-cp39-cp39-linux_x86_64.whl
 sentry_sdk-0.14.4-py2.py3-none-any.whl
 six-1.15.0-py2.py3-none-any.whl
 tabulate-0.8.8-py3-none-any.whl
