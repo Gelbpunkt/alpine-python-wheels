@@ -7,6 +7,7 @@ certifi-2020.4.5.2-py2.py3-none-any.whl
 idna-2.9-py2.py3-none-any.whl
 psutil-5.7.1-cp39-cp39-linux_x86_64.whl
 hiredis-1.0.1-cp39-cp39-linux_x86_64.whl
+orjson-3.1.0-cp39-cp39-linux_x86_64.whl
 wheel-0.34.2-py2.py3-none-any.whl
 uvloop-0.15.0.dev0-cp39-cp39-linux_x86_64.whl
 Brotli-1.0.7-cp39-cp39-linux_x86_64.whl
@@ -14,7 +15,6 @@ cchardet-2.1.6-cp39-cp39-linux_x86_64.whl
 six-1.15.0-py2.py3-none-any.whl
 typing_extensions-3.7.4.2-py3-none-any.whl
 multidict-4.7.6-cp39-cp39-linux_x86_64.whl
-orjson-3.0.2-cp39-cp39-linux_x86_64.whl
 regex-2020.6.8-cp39-cp39-linux_x86_64.whl
 humanize-2.4.0-py3-none-any.whl
 lru_dict-1.1.6-cp39-cp39-linux_x86_64.whl
@@ -38,7 +38,7 @@ aiodns-2.0.0-py2.py3-none-any.whl
 dateparser-0.7.4-py2.py3-none-any.whl
 aiohttp-4.0.0a1-cp39-cp39-linux_x86_64.whl
 aiowiki-1.0.0-py3-none-any.whl
-discord.py-1.4.0a2371+g047b0b6-py3-none-any.whl
+sentry_sdk-0.14.4-py2.py3-none-any.whl
+discord.py-1.4.0a2371+g59efd24-py3-none-any.whl
 wavelink-0.8.0-py3-none-any.whl
 discord_ext_menus-1.0.0a21+gd9965ec-py3-none-any.whl
-sentry_sdk-0.14.4-py2.py3-none-any.whl
