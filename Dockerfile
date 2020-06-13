@@ -11,15 +11,19 @@ COPY 0002-Support-orjson.patch /tmp/
 RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
-    curl https://sh.rustup.rs -o rustup.sh && \
-    ash rustup.sh -y --default-toolchain nightly && \
+    curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y && \
     source $HOME/.cargo/env && \
+    rustup toolchain install nightly-2020-06-01 --allow-downgrade --profile minimal && \
+    rustup default nightly-2020-06-01 && \
+    pip install maturin && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     pip install -U git+https://github.com/pypa/wheel && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    pip wheel . && \
+    rustup override set nightly-2020-06-01 && \
+    rustup toolchain list && \
+    maturin build --no-sdist --release --strip --interpreter python3 --manylinux off && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
     cd lru-dict && \
