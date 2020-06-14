@@ -12,9 +12,10 @@ COPY 0001-Python-3.10-compatibility.patch /tmp/
 RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
-    curl https://sh.rustup.rs -o rustup.sh && \
-    ash rustup.sh -y --default-toolchain nightly && \
+    curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y && \
     source $HOME/.cargo/env && \
+    rustup toolchain install nightly-2020-06-01 --profile minimal --allow-downgrade && \
+    rustup default nightly-2020-06-01 && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     pip install -U git+https://github.com/pypa/wheel && \
@@ -27,6 +28,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
+    rustup override set nightly-2020-06-01 && \
     maturin build --no-sdist --release --strip --manylinux off -i python && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
@@ -48,6 +50,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/cython/cython && \
     cd cython && \
+    git pull origin pull/3611/merge --no-edit && \
     pip wheel . && \
     pip install *.whl && \
     CYTHON_VERSION=$(pip show cython | grep "Version" | cut -d' ' -f 2) && \
@@ -62,6 +65,23 @@ RUN set -ex && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    curl -L https://foss.heptapod.net/pypy/cffi/-/archive/branch/default/cffi-branch-default.zip -o cffi.zip && \
+    unzip cffi.zip && \
+    cd cffi-branch-default && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/aio-libs/multidict && \
+    cd multidict && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/aio-libs/yarl && \
+    cd yarl && \
+    make cythonize && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
