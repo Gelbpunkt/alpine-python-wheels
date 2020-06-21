@@ -14,6 +14,7 @@ orjson-3.1.1-cp39-cp39-linux_x86_64.whl
 six-1.15.0-py2.py3-none-any.whl
 typing_extensions-3.7.4.2-py3-none-any.whl
 certifi-2020.6.20-py2.py3-none-any.whl
+humanize-2.4.1.dev10-py3-none-any.whl
 multidict-4.7.6-cp39-cp39-linux_x86_64.whl
 regex-2020.6.8-cp39-cp39-linux_x86_64.whl
 lru_dict-1.1.6-cp39-cp39-linux_x86_64.whl
@@ -21,7 +22,6 @@ pycparser-2.20-py2.py3-none-any.whl
 asyncpg-0.21.0.dev0+aa67d61-cp39-cp39-linux_x86_64.whl
 chardet-3.0.4-py2.py3-none-any.whl
 python_chess-0.31.2-py3-none-any.whl
-humanize-2.4.1.dev8-py3-none-any.whl
 astunparse-1.6.3-py2.py3-none-any.whl
 tzlocal-2.1-py2.py3-none-any.whl
 attrs-19.3.0-py2.py3-none-any.whl
@@ -38,7 +38,7 @@ dateparser-0.7.6-py2.py3-none-any.whl
 aiodns-2.0.0-py2.py3-none-any.whl
 aiohttp-4.0.0a1-cp39-cp39-linux_x86_64.whl
 aiowiki-1.0.0-py3-none-any.whl
+discord.py-1.4.0a2371+g356dedf-py3-none-any.whl
 sentry_sdk-0.15.1-py2.py3-none-any.whl
-discord.py-1.4.0a2371+g5dcc626-py3-none-any.whl
 wavelink-0.8.0-py3-none-any.whl
 discord_ext_menus-1.0.0a21+gd9965ec-py3-none-any.whl
