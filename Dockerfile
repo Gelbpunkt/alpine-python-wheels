@@ -106,9 +106,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/Wavelink && \
     cd Wavelink && \
-    git checkout patched && \
-    sed -i 's/aiohttp.ClientSession(loop=self.loop)/aiohttp.ClientSession()/' wavelink/client.py && \
-    sed -i '88d' wavelink/websocket.py && \
+    git checkout patched-2 && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
