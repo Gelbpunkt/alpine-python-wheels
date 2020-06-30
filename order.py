@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     whl_order = []
 
-    max_iterations = 5
+    max_iterations = 10
 
     for iteration in range(max_iterations):
         keys = requirements.keys()
