@@ -1,57 +1,39 @@
-From 6c45a8ddb8048e7ed710d1e764371185773866fa Mon Sep 17 00:00:00 2001
+From 16701b73315358a31f296d1b6c7383225a1bd4c0 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <jens@troet.org>
-Date: Sat, 23 May 2020 20:26:34 +0200
+Date: Wed, 1 Jul 2020 13:17:28 +0200
 Subject: [PATCH] Support orjson
 
 ---
- sentry_sdk/envelope.py  | 6 +++---
- sentry_sdk/transport.py | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ sentry_sdk/utils.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sentry_sdk/envelope.py b/sentry_sdk/envelope.py
-index 701b84a..4f7b828 100644
---- a/sentry_sdk/envelope.py
-+++ b/sentry_sdk/envelope.py
-@@ -86,7 +86,7 @@ class Envelope(object):
-         self, f  # type: Any
-     ):
-         # type: (...) -> None
--        f.write(json.dumps(self.headers, allow_nan=False).encode("utf-8"))
-+        f.write(json.dumps(self.headers))
-         f.write(b"\n")
-         for item in self.items:
-             item.serialize_into(f)
-@@ -142,7 +142,7 @@ class PayloadRef(object):
-                 with open(self.path, "rb") as f:
-                     self.bytes = f.read()
-             elif self.json is not None:
--                self.bytes = json.dumps(self.json, allow_nan=False).encode("utf-8")
-+                self.bytes = json.dumps(self.json)
-             else:
-                 self.bytes = b""
-         return self.bytes
-@@ -256,7 +256,7 @@ class Item(object):
-         headers = dict(self.headers)
-         length, writer = self.payload._prepare_serialize()
-         headers["length"] = length
--        f.write(json.dumps(headers, allow_nan=False).encode("utf-8"))
-+        f.write(json.dumps(headers))
-         f.write(b"\n")
-         writer(f)
-         f.write(b"\n")
-diff --git a/sentry_sdk/transport.py b/sentry_sdk/transport.py
-index c6f926a..4c1a403 100644
---- a/sentry_sdk/transport.py
-+++ b/sentry_sdk/transport.py
-@@ -210,7 +210,7 @@ class HttpTransport(Transport):
+diff --git a/sentry_sdk/utils.py b/sentry_sdk/utils.py
+index 5487963..b01f5f9 100644
+--- a/sentry_sdk/utils.py
++++ b/sentry_sdk/utils.py
+@@ -1,4 +1,3 @@
+-import json
+ import linecache
+ import logging
+ import os
+@@ -6,6 +5,8 @@ import sys
  
-         body = io.BytesIO()
-         with gzip.GzipFile(fileobj=body, mode="w") as f:
--            f.write(json.dumps(event, allow_nan=False).encode("utf-8"))
-+            f.write(json.dumps(event))
+ from datetime import datetime
  
-         assert self.parsed_dsn is not None
-         logger.debug(
++import orjson
++
+ import sentry_sdk
+ from sentry_sdk._compat import urlparse, text_type, implements_str, PY2
+ 
+@@ -41,7 +42,7 @@ MAX_FORMAT_PARAM_LENGTH = 128
+ def json_dumps(data):
+     # type: (Any) -> bytes
+     """Serialize data into a compact JSON representation encoded as UTF-8."""
+-    return json.dumps(data, allow_nan=False, separators=(",", ":")).encode("utf-8")
++    return orjson.dumps(data)
+ 
+ 
+ def _get_debug_hub():
 -- 
 2.26.2
 
