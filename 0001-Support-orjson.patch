@@ -1,13 +1,14 @@
-From 446f15f7cac2490e43706813746b1ed9fc5e6471 Mon Sep 17 00:00:00 2001
+From 322c857b56ba8cf1b6440c1fe0a423895d4bca28 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <jens@troet.org>
-Date: Sun, 7 Jun 2020 12:47:34 +0200
-Subject: [PATCH] Patches
+Date: Sun, 12 Jul 2020 18:16:00 +0200
+Subject: [PATCH] Support orjson
 
 ---
  discord/gateway.py | 3 ++-
  discord/http.py    | 4 ++--
  discord/utils.py   | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ requirements.txt   | 2 +-
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/discord/gateway.py b/discord/gateway.py
 index 56c1be9..bebd8ed 100644
@@ -31,7 +32,7 @@ index 56c1be9..bebd8ed 100644
      async def send_as_json(self, data):
          try:
 diff --git a/discord/http.py b/discord/http.py
-index d331c46..1a3b655 100644
+index 4651490..efeedcb 100644
 --- a/discord/http.py
 +++ b/discord/http.py
 @@ -120,7 +120,7 @@ class HTTPClient:
@@ -53,10 +54,10 @@ index d331c46..1a3b655 100644
              file = files[0]
              form.add_field('file', file.fp, filename=file.filename, content_type='application/octet-stream')
 diff --git a/discord/utils.py b/discord/utils.py
-index e32ee7f..ba144b0 100644
+index a6f3897..a6e87ab 100644
 --- a/discord/utils.py
 +++ b/discord/utils.py
-@@ -301,7 +301,7 @@ def _bytes_to_base64_data(data):
+@@ -315,7 +315,7 @@ def _bytes_to_base64_data(data):
      return fmt.format(mime=mime, data=b64)
  
  def to_json(obj):
@@ -65,6 +66,13 @@ index e32ee7f..ba144b0 100644
  
  def _parse_ratelimit_header(request, *, use_clock=False):
      reset_after = request.headers.get('X-Ratelimit-Reset-After')
+diff --git a/requirements.txt b/requirements.txt
+index 25c9da5..d304ced 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1 +1 @@
+-aiohttp>=3.6.0,<3.7.0
++aiohttp==4.0.0a1
 -- 
 2.26.2
 
