@@ -49,7 +49,7 @@ RUN set -ex && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:0.29.14:$CYTHON_VERSION:g" setup.py && \
+    sed -i "s:0.29.20:$CYTHON_VERSION:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
