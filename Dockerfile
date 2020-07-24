@@ -84,6 +84,21 @@ RUN set -ex && \
     python setup.py bdist_wheel && \
     pip install dist/*.whl && \
     cd .. && \
+    git clone https://github.com/python-attrs/attrs && \
+    cd attrs && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/chardet/chardet && \
+    cd chardet && \
+    pip wheel . && \                                                                                                         
+    pip install *.whl && \                                                          
+    cd .. && \
+    git clone https://github.com/kjd/idna && \
+    cd idna && \
+    pip wheel . && \
+    pip install *.whl && \                                                          
+    cd .. && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \

@@ -1,13 +1,13 @@
-From 8777050ce3750378f7ce0d69d66b8a2f5e81a350 Mon Sep 17 00:00:00 2001
+From 7b5249e658405a48363eae7caf5aee61ca24009b Mon Sep 17 00:00:00 2001
 From: Jens Reidel <jens@troet.org>
-Date: Thu, 28 May 2020 11:53:47 +0200
+Date: Fri, 24 Jul 2020 21:31:03 +0200
 Subject: [PATCH] Python 3.10 compatibility
 
 ---
- setup.py                  | 2 +-
- src/build_context.rs      | 2 +-
- src/python_interpreter.rs | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ setup.py                  |  2 +-
+ src/build_context.rs      |  2 +-
+ src/python_interpreter.rs | 12 ++++++------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/setup.py b/setup.py
 index e3590d2..722afc2 100644
@@ -36,9 +36,18 @@ index c4ff4d2..98824d2 100644
              ));
          }
 diff --git a/src/python_interpreter.rs b/src/python_interpreter.rs
-index e945abb..013459a 100644
+index e945abb..727b536 100644
 --- a/src/python_interpreter.rs
 +++ b/src/python_interpreter.rs
+@@ -286,7 +286,7 @@ pub struct PythonInterpreter {
+     pub ext_suffix: Option<String>,
+     /// cpython or pypy
+     pub interpreter: Interpreter,
+-    /// Part of sysconfig's SOABI specifying {major}{minor}{abiflags}
++    /// Part of sysconfig's SOABI specifying {major}_{minor}{abiflags}
+     ///
+     /// Note that this always `None` on windows
+     pub abi_tag: Option<String>,
 @@ -363,7 +363,7 @@ impl PythonInterpreter {
                  let platform = self.target.get_platform_tag(manylinux);
                  if self.target.is_unix() {
@@ -57,6 +66,34 @@ index e945abb..013459a 100644
                          major = self.major,
                          minor = self.minor,
                          platform = platform
+@@ -431,7 +431,7 @@ impl PythonInterpreter {
+ 
+                 if self.target.is_freebsd() {
+                     format!(
+-                        "{base}.cpython-{major}{minor}{abiflags}.so",
++                        "{base}.cpython-{major}_{minor}{abiflags}.so",
+                         base = base,
+                         major = self.major,
+                         minor = self.minor,
+@@ -439,7 +439,7 @@ impl PythonInterpreter {
+                     )
+                 } else if self.target.is_unix() {
+                     format!(
+-                        "{base}.cpython-{major}{minor}{abiflags}-{platform}.so",
++                        "{base}.cpython-{major}_{minor}{abiflags}-{platform}.so",
+                         base = base,
+                         major = self.major,
+                         minor = self.minor,
+@@ -448,7 +448,7 @@ impl PythonInterpreter {
+                     )
+                 } else {
+                     format!(
+-                        "{base}.cp{major}{minor}-{platform}.pyd",
++                        "{base}.cp{major}_{minor}-{platform}.pyd",
+                         base = base,
+                         major = self.major,
+                         minor = self.minor,
 -- 
 2.26.2
+
 
