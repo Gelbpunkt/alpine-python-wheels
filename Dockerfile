@@ -12,13 +12,12 @@ COPY 0001-Python-3.10-compatibility.patch /tmp/
 RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
-    curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y && \
+    curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal -y && \
     source $HOME/.cargo/env && \
-    rustup toolchain install nightly-2020-06-01 --profile minimal --allow-downgrade && \
-    rustup default nightly-2020-06-01 && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
-    pip install -U git+https://github.com/pypa/wheel && \
+    pip install -U git+https://github.com/pypa/wheel.git && \
+    pip install -U git+https://github.com/pypa/pip.git && \
     git clone https://github.com/PyO3/maturin && \
     cd maturin && \
     git am -3 /tmp/0001-Python-3.10-compatibility.patch && \
@@ -28,7 +27,6 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    rustup override set nightly-2020-06-01 && \
     maturin build --no-sdist --release --strip --manylinux off -i python && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
@@ -58,7 +56,7 @@ RUN set -ex && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:0.29.14:$CYTHON_VERSION:g" setup.py && \
+    sed -i "s:0.29.20:$CYTHON_VERSION:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -76,14 +74,15 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/aio-libs/multidict && \
     cd multidict && \
-    pip wheel . && \
-    pip install *.whl && \
+    python setup.py bdist_wheel && \
+    pip install dist/*.whl && \
     cd .. && \
     git clone https://github.com/aio-libs/yarl && \
     cd yarl && \
+    sed -i "s:0.29.21:$CYTHON_VERSION:g" requirements/cython.txt && \
     make cythonize && \
-    pip wheel . && \
-    pip install *.whl && \
+    python setup.py bdist_wheel && \
+    pip install dist/*.whl && \
     cd .. && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
@@ -91,8 +90,8 @@ RUN set -ex && \
     git pull origin pull/4483/merge --no-edit && \
     echo "cython==$CYTHON_VERSION" > requirements/cython.txt && \
     make cythonize && \
-    pip wheel .[speedups] && \
-    pip install *.whl && \
+    python setup.py bdist_wheel && \
+    pip install dist/*.whl && \
     TIMEOUT_VERSION=$(pip show async_timeout | grep "Version" | cut -d' ' -f 2) && \
     cd .. && \
     git clone https://github.com/aio-libs/aioredis && \
@@ -127,9 +126,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/Wavelink && \
     cd Wavelink && \
-    git checkout patched && \
-    sed -i 's/aiohttp.ClientSession(loop=self.loop)/aiohttp.ClientSession()/' wavelink/client.py && \
-    sed -i '88d' wavelink/websocket.py && \
+    git checkout patched-2 && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
