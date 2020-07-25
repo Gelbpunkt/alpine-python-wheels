@@ -32,7 +32,7 @@ urllib3-1.25.10-py2.py3-none-any.whl
 async_timeout-4.0.0a2-py3-none-any.whl
 aiohttp-4.0.0a1-cp3_10-cp3_10-linux_x86_64.whl
 dateparser-0.7.6-py2.py3-none-any.whl
-discord.py-1.4.0a2407+gea1fb88-py3-none-any.whl
+discord.py-1.4.0a2412+gcd0b439-py3-none-any.whl
 discord_ext_menus-1.0.0a22+gcc108be-py3-none-any.whl
 aiowiki-1.0.0-py3-none-any.whl
 sentry_sdk-0.16.2-py2.py3-none-any.whl

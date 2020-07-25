@@ -129,7 +129,7 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone --single-branch -b sharding-rework https://github.com/Rapptz/discord.py && \
+    git clone --single-branch -b master https://github.com/Rapptz/discord.py && \
     cd discord.py && \
     curl https://github.com/Rapptz/discord.py/compare/master...khazhyk:rfc-param-default.patch -L -o param-default.patch && \
     git am -3 param-default.patch && \
