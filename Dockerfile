@@ -19,7 +19,6 @@ RUN set -ex && \
     pip install -U git+https://github.com/pypa/wheel && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    rustup override set nightly-2020-06-01 && \
     rustup toolchain list && \
     maturin build --no-sdist --release --strip --interpreter python3 --manylinux off && \
     cd .. && \
@@ -90,7 +89,7 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone --single-branch -b sharding-rework https://github.com/Rapptz/discord.py && \
+    git clone --single-branch -b master https://github.com/Rapptz/discord.py && \
     cd discord.py && \
     curl https://github.com/Rapptz/discord.py/compare/master...khazhyk:rfc-param-default.patch -L -o param-default.patch && \
     git am -3 param-default.patch && \
