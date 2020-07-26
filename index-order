@@ -26,13 +26,13 @@ typing_extensions-3.7.4.2-py3-none-any.whl
 fantasy_names-1.0.0-py3-none-any.whl
 pycparser-2.20-py2.py3-none-any.whl
 tzlocal-2.1-py2.py3-none-any.whl
-yarl-1.5.0a0-cp3_10-cp3_10-linux_x86_64.whl
 cffi-1.14.0-cp3_10-cp3_10-linux_x86_64.whl
 urllib3-1.25.10-py2.py3-none-any.whl
+yarl-1.6.0a0-cp3_10-cp3_10-linux_x86_64.whl
 async_timeout-4.0.0a2-py3-none-any.whl
 aiohttp-4.0.0a1-cp3_10-cp3_10-linux_x86_64.whl
 dateparser-0.7.6-py2.py3-none-any.whl
-discord.py-1.4.0a2412+gcd0b439-py3-none-any.whl
+discord.py-1.4.0a2412+g0b5ebc2-py3-none-any.whl
 discord_ext_menus-1.0.0a22+gcc108be-py3-none-any.whl
 aiowiki-1.0.0-py3-none-any.whl
 sentry_sdk-0.16.2-py2.py3-none-any.whl
