@@ -148,7 +148,7 @@ RUN set -ex && \
     cd Wavelink && \
     git checkout patched-2 && \
     rm requirements.txt && \
-    echo "aiohttp==4.0.0a1\ndiscord.py>=1.3.4" > requirements.txt && \
+    echo -e "aiohttp==4.0.0a1\ndiscord.py>=1.3.4" > requirements.txt && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
