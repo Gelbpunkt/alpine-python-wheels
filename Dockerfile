@@ -91,10 +91,8 @@ RUN set -ex && \
     cd .. && \
     git clone --single-branch -b master https://github.com/Rapptz/discord.py && \
     cd discord.py && \
-    curl https://github.com/Rapptz/discord.py/compare/master...khazhyk:rfc-param-default.patch -L -o param-default.patch && \
-    git am -3 param-default.patch && \
-    curl https://github.com/Rapptz/discord.py/compare/master...bryanforbes:typings.patch -L -o typings.patch && \
-    #git am -3 typings.patch && \
+    git pull origin pull/1497/merge && \
+    git pull origin pull/1849/merge && \
     git am -3 /tmp/0001-Support-orjson.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
