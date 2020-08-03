@@ -14,12 +14,12 @@ cffi-1.14.1-cp39-cp39-linux_x86_64.whl
 chardet-3.0.4-py2.py3-none-any.whl
 contextvars_executor-0.0.1-py3-none-any.whl
 dateparser-0.7.6-py2.py3-none-any.whl
-discord.py-1.4.0a2612+g3dc16b8-py3-none-any.whl
+discord.py-1.4.0a2614+ged076c9-py3-none-any.whl
 discord_ext_menus-1.0.0a26+g84caae8-py3-none-any.whl
 distro-1.5.0-py2.py3-none-any.whl
 fantasy_names-1.0.0-py3-none-any.whl
 hiredis-1.1.0-cp39-cp39-linux_x86_64.whl
-humanize-2.5.1.dev19-py3-none-any.whl
+humanize-2.5.1.dev28-py3-none-any.whl
 idna-2.10-py2.py3-none-any.whl
 import_expression-1.1.4-py3-none-any.whl
 lru_dict-1.1.6-cp39-cp39-linux_x86_64.whl
