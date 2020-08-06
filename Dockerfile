@@ -1,4 +1,4 @@
-FROM gelbpunkt/python:gcc10
+FROM docker.io/gelbpunkt/python:gcc10
 
 WORKDIR /build
 
@@ -7,16 +7,17 @@ ENV MAKEFLAGS "-j 8"
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0001-Support-orjson.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
+COPY 0001-Support-relative-date-floats.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
     curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal -y && \
     source $HOME/.cargo/env && \
+    pip install -U pip wheel && \
     pip install maturin && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
-    pip install -U git+https://github.com/pypa/wheel && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
     rustup toolchain list && \
@@ -82,7 +83,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/scrapinghub/dateparser && \
     cd dateparser && \
-    git pull origin pull/531/merge --no-edit && \
+    git am -3 /tmp/0001-Support-relative-date-floats.patch && \
     git pull origin pull/562/merge --no-edit && \
     git pull origin pull/477/merge --no-edit -s recursive -X ours && \
     git am -3 /tmp/0001-Patch-677-ugly.patch && \
@@ -91,8 +92,8 @@ RUN set -ex && \
     cd .. && \
     git clone --single-branch -b master https://github.com/Rapptz/discord.py && \
     cd discord.py && \
-    git pull origin pull/1497/merge && \
-    git pull origin pull/1849/merge && \
+    git pull origin pull/1497/merge --no-edit && \
+    git pull origin pull/1849/merge --no-edit && \
     git am -3 /tmp/0001-Support-orjson.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
@@ -105,11 +106,15 @@ RUN set -ex && \
     git clone https://github.com/Gelbpunkt/Wavelink && \
     cd Wavelink && \
     git checkout patched-2 && \
+    rm requirements.txt && \                                                                                                                              
+    echo -e "aiohttp==4.0.0a1\ndiscord.py>=1.3.4" > requirements.txt && \ 
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/aiowiki && \
     cd aiowiki && \
+    rm requirements.txt && \
+    echo "aiohttp==4.0.0a1" > requirements.txt && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
@@ -146,6 +151,11 @@ RUN set -ex && \
     cd contextvars_executor && \
     pip wheel . && \
     pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/Gelbpunkt/aioscheduler && \
+    cd aioscheduler && \
+    pip wheel . && \                                                                               
+    pip install *.whl && \      
     cd ..
 
 # allow for build caching
