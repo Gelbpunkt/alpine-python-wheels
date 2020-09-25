@@ -1,0 +1,39 @@
+From 16701b73315358a31f296d1b6c7383225a1bd4c0 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <jens@troet.org>
+Date: Wed, 1 Jul 2020 13:17:28 +0200
+Subject: [PATCH] Support orjson
+
+---
+ sentry_sdk/utils.py | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/sentry_sdk/utils.py b/sentry_sdk/utils.py
+index 5487963..b01f5f9 100644
+--- a/sentry_sdk/utils.py
++++ b/sentry_sdk/utils.py
+@@ -1,4 +1,3 @@
+-import json
+ import linecache
+ import logging
+ import os
+@@ -6,6 +5,8 @@ import sys
+ 
+ from datetime import datetime
+ 
++import orjson
++
+ import sentry_sdk
+ from sentry_sdk._compat import urlparse, text_type, implements_str, PY2
+ 
+@@ -41,7 +42,7 @@ MAX_FORMAT_PARAM_LENGTH = 128
+ def json_dumps(data):
+     # type: (Any) -> bytes
+     """Serialize data into a compact JSON representation encoded as UTF-8."""
+-    return json.dumps(data, allow_nan=False, separators=(",", ":")).encode("utf-8")
++    return orjson.dumps(data)
+ 
+ 
+ def _get_debug_hub():
+-- 
+2.26.2
+

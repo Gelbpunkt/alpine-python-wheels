@@ -1,0 +1,27 @@
+From 7e4c5b490cc64af309242fa88dfecb4209673de3 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <jens@troet.org>
+Date: Sat, 5 Sep 2020 14:00:58 +0200
+Subject: [PATCH] support bytes in send_str
+
+---
+ aiohttp/client_ws.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/aiohttp/client_ws.py b/aiohttp/client_ws.py
+index 1e882a88..2ed1299b 100644
+--- a/aiohttp/client_ws.py
++++ b/aiohttp/client_ws.py
+@@ -151,8 +151,8 @@ class ClientWebSocketResponse:
+ 
+     async def send_str(self, data: str,
+                        compress: Optional[int]=None) -> None:
+-        if not isinstance(data, str):
+-            raise TypeError('data argument must be str (%r)' % type(data))
++        if not isinstance(data, (str, bytes, bytearray)):
++            raise TypeError('data argument must be str or byte-ish (%r)' % type(data))
+         await self._writer.send(data, binary=False, compress=compress)
+ 
+     async def send_bytes(self, data: bytes,
+-- 
+2.26.2
+

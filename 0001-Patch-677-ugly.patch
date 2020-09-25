@@ -1,0 +1,33 @@
+From 2b2b178949cddee5eb522a32e8daf005fa39df2b Mon Sep 17 00:00:00 2001
+From: Jens Reidel <jens@troet.org>
+Date: Fri, 15 May 2020 12:01:36 +0200
+Subject: [PATCH] Patch #677 ugly
+
+---
+ dateparser/data/date_translation_data/en.py | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/dateparser/data/date_translation_data/en.py b/dateparser/data/date_translation_data/en.py
+index adfc44d..18ae30a 100644
+--- a/dateparser/data/date_translation_data/en.py
++++ b/dateparser/data/date_translation_data/en.py
+@@ -774,9 +774,6 @@ info = {
+         {
+             "(?:12\\s+)?midnight": "00:00"
+         },
+-        {
+-            "(\\d+)h(\\d+)m?": "\\1:\\2"
+-        },
+         {
+             "(?<=from\\s+)now": "in"
+         },
+@@ -820,4 +817,4 @@ info = {
+             "twelve": "12"
+         }
+     ]
+-}
+\ No newline at end of file
++}
+-- 
+2.25.4
+
