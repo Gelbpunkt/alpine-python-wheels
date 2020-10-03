@@ -2,7 +2,7 @@ FROM docker.io/gelbpunkt/python:latest
 
 WORKDIR /build
 
-ENV MAKEFLAGS "-j 8"
+ENV MAKEFLAGS "-j 12"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0001-Support-orjson.patch /tmp/
