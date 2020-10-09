@@ -1,6 +1,6 @@
-From e490aab0ded28c1c19dc1db55e541f8ef8ba1b07 Mon Sep 17 00:00:00 2001
+From e37bbc424fd7ad99f2468a443b3d17200a8006aa Mon Sep 17 00:00:00 2001
 From: Jens Reidel <jens@troet.org>
-Date: Sat, 3 Oct 2020 15:25:09 +0200
+Date: Fri, 9 Oct 2020 13:49:04 +0200
 Subject: [PATCH] Patch packed_simd stuff
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH] Patch packed_simd stuff
  2 files changed, 18 insertions(+), 13 deletions(-)
 
 diff --git a/Cargo.lock b/Cargo.lock
-index 24d8974..1a0668b 100644
+index 24d8974..4d89e1f 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
 @@ -21,10 +21,9 @@ checksum = "cf1de2fe8c75bc145a2f577add951f8134889b4795d47466a54a5c846d691693"
@@ -18,7 +18,7 @@ index 24d8974..1a0668b 100644
  version = "0.6.0"
 -source = "registry+https://github.com/rust-lang/crates.io-index"
 -checksum = "b0017894339f586ccb943b01b9555de56770c11cda818e7e3d8bd93f4ed7f46e"
-+source = "git+https://github.com/llogiq/bytecount#469eaf8395c99397cd64d059737a9054aa014088"
++source = "git+https://github.com/llogiq/bytecount.git#469eaf8395c99397cd64d059737a9054aa014088"
  dependencies = [
 - "packed_simd",
 + "packed_simd_2",
@@ -31,7 +31,7 @@ index 24d8974..1a0668b 100644
  version = "0.8.24"
 -source = "registry+https://github.com/rust-lang/crates.io-index"
 -checksum = "a51b8cf747471cb9499b6d59e59b0444f4c90eba8968c4e44874e92b5b64ace2"
-+source = "git+https://github.com/Gelbpunkt/encoding_rs?branch=packed-simd-2#3e7913c9ef2793bf3126408102635816669b5c1b"
++source = "git+https://github.com/hsivonen/encoding_rs.git#8f76bfe6752f66d699e5c9e1c0127575c4d990a6"
  dependencies = [
   "cfg-if",
 - "packed_simd",
@@ -44,9 +44,9 @@ index 24d8974..1a0668b 100644
  [[package]]
  name = "libc"
 -version = "0.2.77"
-+version = "0.2.78"
++version = "0.2.79"
 +source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "aa7087f49d294270db4e1928fc110c976cd4b9e5a16348e0a1df09afa99e6c98"
++checksum = "2448f6066e80e3bfc792e9c98bf705b4b0fc6e8ef5b43e5889aff0eaa9c58743"
 +
 +[[package]]
 +name = "libm"
@@ -75,7 +75,7 @@ index 24d8974..1a0668b 100644
  
  [[package]]
 diff --git a/Cargo.toml b/Cargo.toml
-index 56a99ea..ac7eca8 100644
+index 56a99ea..abdd478 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
 @@ -50,8 +50,8 @@ classifier = [
@@ -84,8 +84,8 @@ index 56a99ea..ac7eca8 100644
  associative-cache = { version = "1" }
 -bytecount = { version = "0.6", default_features = false, features = ["generic-simd", "runtime-dispatch-simd"] }
 -encoding_rs = { version = "0.8", default_features = false, features = ["simd-accel"] }
-+bytecount = { git = "https://github.com/llogiq/bytecount", default_features = false, features = ["generic-simd", "runtime-dispatch-simd"] }
-+encoding_rs = { git = "https://github.com/Gelbpunkt/encoding_rs", default_features = false, branch = "packed-simd-2", features = ["simd-accel"] }
++bytecount = { git = "https://github.com/llogiq/bytecount.git", default_features = false, features = ["generic-simd", "runtime-dispatch-simd"] }
++encoding_rs = { git = "https://github.com/hsivonen/encoding_rs.git", default_features = false, features = ["simd-accel"] }
  inlinable_string = { version = "0.1" }
  itoa = { version = "0.4", default_features = false }
  once_cell = { version = "1", default_features = false }
