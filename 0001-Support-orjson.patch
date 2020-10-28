@@ -1,18 +1,16 @@
-From ab1d3a487ac35a48a83a006720c0e1b0f496cfe7 Mon Sep 17 00:00:00 2001
+From bb445eb9f92e59a31c3df6354404bbd14b7f06b9 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <jens@troet.org>
-Date: Sat, 5 Sep 2020 13:06:55 +0200
-Subject: [PATCH] Support orjson
+Date: Wed, 28 Oct 2020 22:13:55 +0100
+Subject: [PATCH 1/1] Support orjson
 
-fix user updates in member update
 ---
  discord/http.py  | 4 ++--
- discord/state.py | 9 +++++++++
  discord/utils.py | 2 +-
  requirements.txt | 2 +-
- 4 files changed, 13 insertions(+), 4 deletions(-)
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/discord/http.py b/discord/http.py
-index 1ad11d9..7601090 100644
+index d1556e3..13f56fc 100644
 --- a/discord/http.py
 +++ b/discord/http.py
 @@ -121,7 +121,7 @@ class HTTPClient:
@@ -33,35 +31,8 @@ index 1ad11d9..7601090 100644
          if len(files) == 1:
              file = files[0]
              form.add_field('file', file.fp, filename=file.filename, content_type='application/octet-stream')
-diff --git a/discord/state.py b/discord/state.py
-index 182641b..c884a68 100644
---- a/discord/state.py
-+++ b/discord/state.py
-@@ -732,6 +732,7 @@ class ConnectionState:
-             return
- 
-         member = guild.get_member(user_id)
-+        u = self.get_user(user_id)
-         if member is not None:
-             old_member = Member._copy(member)
-             member._update(data)
-@@ -740,6 +741,14 @@ class ConnectionState:
-                 self.dispatch('user_update', user_update[0], user_update[1])
- 
-             self.dispatch('member_update', old_member, member)
-+        elif u is not None:
-+            original = (u.name, u.avatar, u.discriminator)
-+            # These keys seem to always be available
-+            modified = (user['username'], user['avatar'], user['discriminator'])
-+            if original != modified:
-+                previous = User._copy(u)
-+                u.name, u.avatar, u.discriminator = modified
-+                self.dispatch('user_update', previous, u)
-         else:
-             log.debug('GUILD_MEMBER_UPDATE referencing an unknown member ID: %s. Discarding.', user_id)
- 
 diff --git a/discord/utils.py b/discord/utils.py
-index efab590..ba96001 100644
+index 56ac669..3c7ced2 100644
 --- a/discord/utils.py
 +++ b/discord/utils.py
 @@ -315,7 +315,7 @@ def _bytes_to_base64_data(data):
