@@ -142,21 +142,13 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone https://github.com/dabeaz/ply && \
-    cd ply && \
-    echo -e "from distutils.core import setup\nfrom Cython.Build import cythonize\nsetup(name=\"ply\", ext_modules=cythonize('ply/*.py'))" > setup.py && \
-    sed -i 's/f = sys._getframe(levels)/f = sys._getframe()/' ply/lex.py && \
-    sed -i 's/f = sys._getframe(levels)/f = sys._getframe()/' ply/yacc.py && \
+    git clone https://github.com/dabeaz/sly && \
+    cd sly && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
     git clone https://github.com/jmoiron/humanize && \
     cd humanize && \
-    pip wheel . && \
-    pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/hellysmile/contextvars_executor && \
-    cd contextvars_executor && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
