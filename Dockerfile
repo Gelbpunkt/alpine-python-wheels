@@ -64,13 +64,16 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
+    git clone https://github.com/aio-libs/multidict && \
+    cd multidict && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
     git am -3 /tmp/0001-support-bytes-in-send_str.patch && \
-    git pull origin pull/4483/merge --no-edit && \
-    git pull origin pull/4828/merge --no-edit && \
-    echo "cython==$CYTHON_VERSION" > requirements/cython.txt && \
+    echo -e "multidict\ncython==$CYTHON_VERSION" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
     pip install *.whl && \
