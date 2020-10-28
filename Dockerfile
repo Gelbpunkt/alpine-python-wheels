@@ -10,7 +10,6 @@ COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
 COPY 0001-support-bytes-in-send_str.patch /tmp/
-COPY 0001-Patch-packed_simd-stuff.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
@@ -26,7 +25,6 @@ RUN set -ex && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    git am -3 /tmp/0001-Patch-packed_simd-stuff.patch && \
     maturin build --no-sdist --release --strip --interpreter python3 --manylinux off && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
