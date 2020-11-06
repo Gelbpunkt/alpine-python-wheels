@@ -1,11 +1,12 @@
-From 188fd6fb3748b995ca8fb692a3de3f133a22726b Mon Sep 17 00:00:00 2001
-From: Jens Reidel <jens@troet.org>
-Date: Wed, 28 Oct 2020 21:42:53 +0100
-Subject: [PATCH] support bytes in send_str
+From 446ca2db1d97960971c235579b5bfa6d3b5d49b1 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Fri, 6 Nov 2020 21:55:22 +0100
+Subject: [PATCH 1/1] aiohttp-orjson
 
 ---
  aiohttp/client_ws.py | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ aiohttp/payload.py   | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/aiohttp/client_ws.py b/aiohttp/client_ws.py
 index 37d5ac73..fe5a5715 100644
@@ -22,6 +23,19 @@ index 37d5ac73..fe5a5715 100644
          await self._writer.send(data, binary=False, compress=compress)
  
      async def send_bytes(self, data: bytes, compress: Optional[int] = None) -> None:
+diff --git a/aiohttp/payload.py b/aiohttp/payload.py
+index 9bcd18be..501f3e4c 100644
+--- a/aiohttp/payload.py
++++ b/aiohttp/payload.py
+@@ -373,7 +373,7 @@ class JsonPayload(BytesPayload):
+     ) -> None:
+ 
+         super().__init__(
+-            dumps(value).encode(encoding),
++            dumps(value),
+             content_type=content_type,
+             encoding=encoding,
+             *args,
 -- 
 2.26.2
 

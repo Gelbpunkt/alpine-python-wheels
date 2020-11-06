@@ -9,7 +9,7 @@ COPY 0001-Support-orjson.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
-COPY 0001-support-bytes-in-send_str.patch /tmp/
+COPY 0001-aiohttp-orjson.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
@@ -72,7 +72,7 @@ RUN set -ex && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
-    git am -3 /tmp/0001-support-bytes-in-send_str.patch && \
+    git am -3 /tmp/0001-aiohttp-orjson.patch && \
     echo -e "multidict\ncython==$CYTHON_VERSION" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
