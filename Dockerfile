@@ -20,7 +20,7 @@ RUN set -ex && \
         curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal -y && source $HOME/.cargo/env; \
     fi && \
     pip install -U pip wheel && \
-    pip install maturin && \
+    pip install maturin typing_extensions && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/ijl/orjson && \
@@ -53,7 +53,7 @@ RUN set -ex && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:0.29.20:$CYTHON_VERSION:g" setup.py && \
+    sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
@@ -73,7 +73,7 @@ RUN set -ex && \
     cd aiohttp && \
     git submodule update --init --recursive && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
-    echo -e "multidict\ncython==$CYTHON_VERSION" > requirements/cython.txt && \
+    echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions==3.7.4.3" > requirements/cython.txt && \
     make cythonize && \
     pip wheel .[speedups] && \
     pip install *.whl && \

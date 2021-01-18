@@ -1,6 +1,6 @@
-From bb445eb9f92e59a31c3df6354404bbd14b7f06b9 Mon Sep 17 00:00:00 2001
-From: Jens Reidel <jens@troet.org>
-Date: Wed, 28 Oct 2020 22:13:55 +0100
+From afa5934256de688afd4a4fa80639be61866360d9 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Wed, 25 Nov 2020 18:11:26 +0100
 Subject: [PATCH 1/1] Support orjson
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 1/1] Support orjson
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/discord/http.py b/discord/http.py
-index d1556e3..13f56fc 100644
+index 9459a9c..1412449 100644
 --- a/discord/http.py
 +++ b/discord/http.py
 @@ -121,7 +121,7 @@ class HTTPClient:
@@ -22,7 +22,7 @@ index d1556e3..13f56fc 100644
              'autoclose': False,
              'headers': {
                  'User-Agent': self.user_agent,
-@@ -378,7 +378,7 @@ class HTTPClient:
+@@ -380,7 +380,7 @@ class HTTPClient:
          if allowed_mentions:
              payload['allowed_mentions'] = allowed_mentions
  
@@ -45,12 +45,12 @@ index 56ac669..3c7ced2 100644
  def _parse_ratelimit_header(request, *, use_clock=False):
      reset_after = request.headers.get('X-Ratelimit-Reset-After')
 diff --git a/requirements.txt b/requirements.txt
-index 25c9da5..d304ced 100644
+index 8517fb4..d304ced 100644
 --- a/requirements.txt
 +++ b/requirements.txt
 @@ -1 +1 @@
--aiohttp>=3.6.0,<3.7.0
+-aiohttp>=3.6.0,<3.8.0
 +aiohttp==4.0.0a1
 -- 
-2.26.2
+2.28.0
 
