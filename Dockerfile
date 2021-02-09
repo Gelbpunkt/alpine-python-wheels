@@ -60,7 +60,7 @@ RUN set -ex && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
-    git pull origin pull/337/merge --no-edit && \
+    sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
