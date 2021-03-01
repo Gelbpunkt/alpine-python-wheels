@@ -10,6 +10,7 @@ COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
+COPY 0001-Fix-unknown-events.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
@@ -114,6 +115,7 @@ RUN set -ex && \
     git clone https://github.com/PythonistaGuild/Wavelink && \
     cd Wavelink && \
     git am -3 /tmp/0001-Fix-aiohttp-4-compat.patch && \
+    git am -3 /tmp/0001-Fix-unknown-events.patch && \
     rm requirements.txt && \
     echo -e "aiohttp==4.0.0a1\ndiscord.py>=1.3.4" > requirements.txt && \
     pip wheel . --no-deps && \

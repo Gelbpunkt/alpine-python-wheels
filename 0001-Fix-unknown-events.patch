@@ -1,0 +1,29 @@
+From a40c68ac46c4250a5cadd8e52029995492295396 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Mon, 1 Mar 2021 16:35:32 +0100
+Subject: [PATCH 1/1] Fix unknown events
+
+---
+ wavelink/websocket.py | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/wavelink/websocket.py b/wavelink/websocket.py
+index 64e1eaf..074a805 100644
+--- a/wavelink/websocket.py
++++ b/wavelink/websocket.py
+@@ -131,7 +131,11 @@ class WebSocket:
+             except KeyError:
+                 return
+ 
+-            listener, payload = self._get_event_payload(data['type'], data)
++            res = self._get_event_payload(data['type'], data)
++            if res is not None:
++                listener, payload = res
++            else:
++                return
+ 
+             __log__.debug(f'WEBSOCKET | op: event:: {data}')
+ 
+-- 
+2.29.2
+
