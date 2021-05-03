@@ -1,0 +1,215 @@
+From 0cff034136b16044dc87f2567de7ab26d9273b43 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Mon, 3 May 2021 09:03:05 +0200
+Subject: [PATCH 1/1] [commands] custom default arguments
+
+---
+ discord/ext/commands/__init__.py  |  1 +
+ discord/ext/commands/converter.py |  9 ++-
+ discord/ext/commands/core.py      | 20 ++++++-
+ discord/ext/commands/default.py   | 96 +++++++++++++++++++++++++++++++
+ 4 files changed, 120 insertions(+), 6 deletions(-)
+ create mode 100644 discord/ext/commands/default.py
+
+diff --git a/discord/ext/commands/__init__.py b/discord/ext/commands/__init__.py
+index 3da57d80..9efd96cd 100644
+--- a/discord/ext/commands/__init__.py
++++ b/discord/ext/commands/__init__.py
+@@ -16,4 +16,5 @@ from .help import *
+ from .converter import *
+ from .cooldowns import *
+ from .cog import *
++from .default import CustomDefault
+ from .flags import *
+diff --git a/discord/ext/commands/converter.py b/discord/ext/commands/converter.py
+index 1f1828b1..78d1c9f6 100644
+--- a/discord/ext/commands/converter.py
++++ b/discord/ext/commands/converter.py
+@@ -44,6 +44,7 @@ from typing import (
+ )
+ 
+ import discord
++from .default import CustomDefault
+ from .errors import *
+ 
+ if TYPE_CHECKING:
+@@ -898,10 +899,12 @@ def _convert_to_bool(argument: str) -> bool:
+ def get_converter(param: inspect.Parameter) -> Any:
+     converter = param.annotation
+     if converter is param.empty:
+-        if param.default is not param.empty:
+-            converter = str if param.default is None else type(param.default)
+-        else:
++        if param.default is param.empty or param.default is None:
+             converter = str
++        elif (inspect.isclass(param.default) and issubclass(param.default, CustomDefault)) or isinstance(param.default, CustomDefault):
++            converter = Union[param.default.converters]
++        else:
++            converter = type(param.default)
+     return converter
+ 
+ 
+diff --git a/discord/ext/commands/core.py b/discord/ext/commands/core.py
+index cb986e3b..15385c80 100644
+--- a/discord/ext/commands/core.py
++++ b/discord/ext/commands/core.py
+@@ -39,6 +39,7 @@ import discord
+ from .errors import *
+ from .cooldowns import Cooldown, BucketType, CooldownMapping, MaxConcurrency, DynamicCooldownMapping
+ from .converter import run_converters, get_converter, Greedy
++from .default import CustomDefault
+ from ._types import _BaseCommand
+ from .cog import Cog
+ 
+@@ -443,6 +444,19 @@ class Command(_BaseCommand):
+         finally:
+             ctx.bot.dispatch('command_error', ctx, error)
+ 
++    async def _resolve_default(self, ctx, param):
++        try:
++            if inspect.isclass(param.default) and issubclass(param.default, CustomDefault):
++                instance = param.default()
++                return await instance.default(ctx=ctx, param=param)
++            elif isinstance(param.default, CustomDefault):
++                return await param.default.default(ctx=ctx, param=param)
++        except CommandError as e:
++            raise e
++        except Exception as e:
++            raise ConversionError(param.default, e) from e
++        return param.default
++
+     async def transform(self, ctx, param):
+         required = param.default is param.empty
+         converter = get_converter(param)
+@@ -472,7 +486,7 @@ class Command(_BaseCommand):
+                 if hasattr(converter, '__commands_is_flag__') and converter._can_be_constructible():
+                     return await converter._construct_default(ctx)
+                 raise MissingRequiredArgument(param)
+-            return param.default
++            return await self._resolve_default(ctx, param)
+ 
+         previous = view.index
+         if consume_rest_is_special:
+@@ -501,7 +515,7 @@ class Command(_BaseCommand):
+                 result.append(value)
+ 
+         if not result and not required:
+-            return param.default
++            return await self._resolve_default(ctx, param)
+         return result
+ 
+     async def _transform_greedy_var_pos(self, ctx, param, converter):
+@@ -514,7 +528,7 @@ class Command(_BaseCommand):
+             view.index = previous
+             raise RuntimeError() from None # break loop
+         else:
+-            return value
++            return value or await self._resolve_default(ctx, param)
+ 
+     @property
+     def clean_params(self) -> Dict[str, inspect.Parameter]:
+diff --git a/discord/ext/commands/default.py b/discord/ext/commands/default.py
+new file mode 100644
+index 00000000..8c1df005
+--- /dev/null
++++ b/discord/ext/commands/default.py
+@@ -0,0 +1,96 @@
++"""
++The MIT License (MIT)
++Copyright (c) 2015-2019 Rapptz
++Permission is hereby granted, free of charge, to any person obtaining a
++copy of this software and associated documentation files (the "Software"),
++to deal in the Software without restriction, including without limitation
++the rights to use, copy, modify, merge, publish, distribute, sublicense,
++and/or sell copies of the Software, and to permit persons to whom the
++Software is furnished to do so, subject to the following conditions:
++The above copyright notice and this permission notice shall be included in
++all copies or substantial portions of the Software.
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
++OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++DEALINGS IN THE SOFTWARE.
++"""
++
++import discord
++
++from .errors import MissingRequiredArgument
++
++__all__ = (
++    'CustomDefault',
++    'Author',
++    'CurrentChannel',
++    'CurrentGuild',
++    'Call',
++)
++
++class CustomDefaultMeta(type):
++    def __new__(cls, *args, **kwargs):
++        name, bases, attrs = args
++        attrs['display'] = kwargs.pop('display', name)
++        return super().__new__(cls, name, bases, attrs, **kwargs)
++
++    def __repr__(cls):
++        return str(cls)
++
++    def __str__(cls):
++        return cls.display
++
++class CustomDefault(metaclass=CustomDefaultMeta):
++    """The base class of custom defaults that require the :class:`.Context`.
++    Classes that derive from this should override the :attr:`~.CustomDefault.converters` attribute to specify
++    converters to use and the :meth:`~.CustomDefault.default` method to do its conversion logic.
++    This method must be a coroutine.
++    """
++    converters = (str,)
++
++    async def default(self, ctx, param):
++        """|coro|
++        The method to override to do conversion logic.
++        If an error is found while converting, it is recommended to
++        raise a :exc:`.CommandError` derived exception as it will
++        properly propagate to the error handlers.
++        Parameters
++        -----------
++        ctx: :class:`.Context`
++            The invocation context that the argument is being used in.
++        """
++        raise NotImplementedError('Derived classes need to implement this.')
++
++
++class Author(CustomDefault):
++    """Default parameter which returns the author for this context."""
++    converters = (discord.Member, discord.User)
++
++    async def default(self, ctx, param):
++        return ctx.author
++
++class CurrentChannel(CustomDefault):
++    """Default parameter which returns the channel for this context."""
++    converters = (discord.TextChannel,)
++
++    async def default(self, ctx, param):
++        return ctx.channel
++
++class CurrentGuild(CustomDefault):
++    """Default parameter which returns the guild for this context."""
++
++    async def default(self, ctx, param):
++        if ctx.guild:
++            return ctx.guild
++        raise MissingRequiredArgument(param)
++
++class Call(CustomDefault):
++    """Easy wrapper for lambdas/inline defaults."""
++
++    def __init__(self, callback):
++        self._callback = callback
++
++    async def default(self, ctx, param):
++        return self._callback(ctx, param)
+-- 
+2.30.2
+

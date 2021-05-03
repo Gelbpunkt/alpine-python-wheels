@@ -1,6 +1,6 @@
-From afa5934256de688afd4a4fa80639be61866360d9 Mon Sep 17 00:00:00 2001
+From 0bb47834e5d615ec1d5181119c96a7e360cac91e Mon Sep 17 00:00:00 2001
 From: Jens Reidel <adrian@travitia.xyz>
-Date: Wed, 25 Nov 2020 18:11:26 +0100
+Date: Mon, 3 May 2021 09:05:31 +0200
 Subject: [PATCH 1/1] Support orjson
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH 1/1] Support orjson
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/discord/http.py b/discord/http.py
-index 9459a9c..1412449 100644
+index 0eb48124..69e97cba 100644
 --- a/discord/http.py
 +++ b/discord/http.py
-@@ -121,7 +121,7 @@ class HTTPClient:
+@@ -139,7 +139,7 @@ class HTTPClient:
              'proxy_auth': self.proxy_auth,
              'proxy': self.proxy,
              'max_msg_size': 0,
@@ -22,35 +22,35 @@ index 9459a9c..1412449 100644
              'autoclose': False,
              'headers': {
                  'User-Agent': self.user_agent,
-@@ -380,7 +380,7 @@ class HTTPClient:
-         if allowed_mentions:
-             payload['allowed_mentions'] = allowed_mentions
+@@ -409,7 +409,7 @@ class HTTPClient:
+         if message_reference:
+             payload['message_reference'] = message_reference
  
--        form.add_field('payload_json', utils.to_json(payload))
-+        form.add_field('payload_json', utils.to_json(payload).decode("utf-8"))
+-        form.append({'name': 'payload_json', 'value': utils.to_json(payload)})
++        form.append({'name': 'payload_json', 'value': utils.to_json(payload).decode("utf-8")})
          if len(files) == 1:
              file = files[0]
-             form.add_field('file', file.fp, filename=file.filename, content_type='application/octet-stream')
+             form.append(
 diff --git a/discord/utils.py b/discord/utils.py
-index 56ac669..3c7ced2 100644
+index 07229312..776740c4 100644
 --- a/discord/utils.py
 +++ b/discord/utils.py
-@@ -315,7 +315,7 @@ def _bytes_to_base64_data(data):
-     return fmt.format(mime=mime, data=b64)
+@@ -460,7 +460,7 @@ def _bytes_to_base64_data(data: bytes) -> str:
  
- def to_json(obj):
+ 
+ def to_json(obj: Any) -> str:
 -    return json.dumps(obj, separators=(',', ':'), ensure_ascii=True)
 +    return json.dumps(obj)
  
- def _parse_ratelimit_header(request, *, use_clock=False):
-     reset_after = request.headers.get('X-Ratelimit-Reset-After')
+ 
+ def _parse_ratelimit_header(request: _RequestLike, *, use_clock: bool = False) -> float:
 diff --git a/requirements.txt b/requirements.txt
-index 8517fb4..d304ced 100644
+index 8517fb4d..d304ced4 100644
 --- a/requirements.txt
 +++ b/requirements.txt
 @@ -1 +1 @@
 -aiohttp>=3.6.0,<3.8.0
 +aiohttp==4.0.0a1
 -- 
-2.28.0
+2.30.2
 

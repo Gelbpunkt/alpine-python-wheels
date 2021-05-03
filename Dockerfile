@@ -3,6 +3,7 @@ FROM docker.io/gelbpunkt/python:latest
 WORKDIR /build
 
 ENV MAKEFLAGS "-j 12"
+ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0001-Support-orjson.patch /tmp/
@@ -11,15 +12,12 @@ COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-Fix-unknown-events.patch /tmp/
+COPY 0001-commands-custom-default-arguments.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
-    apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev && \
-    if [ $(uname -m) = "aarch64" ]; then \
-        wget https://ftp.travitia.xyz/dist/rust-nightly-aarch64-unknown-linux-musl.tar.gz && tar xf rust-nightly-aarch64-unknown-linux-musl.tar.gz && cd rust-nightly-aarch64-unknown-linux-musl && ash install.sh && cd ..; \
-    else \
-        curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal -y && source $HOME/.cargo/env; \
-    fi && \
+    apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev openssl-dev && \
+    curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal -y && source $HOME/.cargo/env; \
     pip install -U pip wheel && \
     pip install maturin typing_extensions && \
     git config --global user.name "Jens Reidel" && \
@@ -80,6 +78,14 @@ RUN set -ex && \
     pip install *.whl && \
     TIMEOUT_VERSION=$(pip show async_timeout | grep "Version" | cut -d' ' -f 2) && \
     cd .. && \
+    git clone https://github.com/aio-libs/aiohttp aiohttp-3 && \
+    cd aiohttp-3 && \
+    git checkout 3.7 && \
+    git submodule update --init --recursive && \
+    echo -e "-r multidict.txt\ncython==$CYTHON_VERSION" > requirements/cython.txt && \
+    make cythonize && \
+    pip wheel . && \
+    cd .. && \
     git clone https://github.com/aio-libs/aioredis && \
     cd aioredis && \
     sed -i "s:async-timeout:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
@@ -102,7 +108,7 @@ RUN set -ex && \
     cd .. && \
     git clone --single-branch -b master https://github.com/Rapptz/discord.py && \
     cd discord.py && \
-    git pull origin pull/1849/merge --no-edit && \
+    git am -3 /tmp/0001-commands-custom-default-arguments.patch && \
     git am -3 /tmp/0001-Support-orjson.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
@@ -158,6 +164,37 @@ RUN set -ex && \
     cd aioscheduler && \
     pip wheel . && \                                                                               
     pip install *.whl && \      
+    cd .. && \
+    git clone https://github.com/aio-libs/aiohttp-session && \
+    cd aiohttp-session && \
+    pip wheel . --no-deps && \
+    pip install *.whl --no-deps && \
+    cd .. && \
+    git clone https://github.com/aio-libs/aiohttp-jinja2 && \
+    cd aiohttp-jinja2 && \
+    pip wheel . --no-deps && \
+    pip install *.whl --no-deps && \
+    cd .. && \
+    git clone https://github.com/pallets/jinja && \
+    cd jinja && \
+    pip wheel . && \    
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/pyca/cryptography && \
+    cd cryptography && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/Devoxin/Lavalink.py && \
+    cd Lavalink.py && \
+    git checkout dev && \
+    pip wheel . --no-deps && \
+    pip install *.whl --no-deps && \
+    cd .. && \
+    git clone https://github.com/Gelbpunkt/zangy && \
+    cd zangy && \
+    maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
+    pip install target/wheels/*.whl && \
     cd ..
 
 # allow for build caching
