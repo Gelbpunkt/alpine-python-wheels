@@ -24,6 +24,8 @@ RUN set -ex && \
     git config --global user.email "jens@troet.org" && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
+    rm Cargo.lock && \
+    sed -i 4d src/lib.rs && \
     maturin build --no-sdist --release --strip --interpreter python3 --manylinux off && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
@@ -196,7 +198,7 @@ RUN set -ex && \
     maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
     pip install target/wheels/*.whl && \
     cd .. && \
-    git clone https://github.com/daggy123/polaroid && \
+    git clone https://github.com/daggy1234/polaroid && \
     cd polaroid && \
     maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
     pip install target/wheels/*.whl && \
