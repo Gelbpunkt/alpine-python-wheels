@@ -195,6 +195,11 @@ RUN set -ex && \
     cd zangy && \
     maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
     pip install target/wheels/*.whl && \
+    cd .. && \
+    git clone https://github.com/daggy123/polaroid && \
+    cd polaroid && \
+    maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
+    pip install target/wheels/*.whl && \
     cd ..
 
 # allow for build caching
