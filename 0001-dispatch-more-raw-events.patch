@@ -1,0 +1,32 @@
+From e80cbef103cae7ea283b42b87fb12688204d6237 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Sun, 26 Sep 2021 11:00:00 +0200
+Subject: [PATCH 1/1] dispatch more raw events
+
+---
+ discord/state.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/discord/state.py b/discord/state.py
+index 2534e7aa..ef64ccb6 100644
+--- a/discord/state.py
++++ b/discord/state.py
+@@ -699,6 +699,7 @@ class ConnectionState:
+                     self.dispatch('reaction_clear_emoji', reaction)
+ 
+     def parse_interaction_create(self, data) -> None:
++        self.dispatch('raw_interaction', data)
+         interaction = Interaction(data=data, state=self)
+         if data['type'] == 3:  # interaction component
+             custom_id = interaction.data['custom_id']  # type: ignore
+@@ -978,6 +979,7 @@ class ConnectionState:
+             _log.debug('GUILD_MEMBER_REMOVE referencing an unknown guild ID: %s. Discarding.', data['guild_id'])
+ 
+     def parse_guild_member_update(self, data) -> None:
++        self.dispatch('raw_member_update', data)
+         guild = self._get_guild(int(data['guild_id']))
+         user = data['user']
+         user_id = int(user['id'])
+-- 
+2.31.1
+

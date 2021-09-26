@@ -1,14 +1,14 @@
-From 0cff034136b16044dc87f2567de7ab26d9273b43 Mon Sep 17 00:00:00 2001
+From ca21cc69f0f1c02836aab236d646404697962c69 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <adrian@travitia.xyz>
-Date: Mon, 3 May 2021 09:03:05 +0200
-Subject: [PATCH 1/1] [commands] custom default arguments
+Date: Sun, 26 Sep 2021 10:58:09 +0200
+Subject: [PATCH 1/1] commands custom default arguments
 
 ---
  discord/ext/commands/__init__.py  |  1 +
  discord/ext/commands/converter.py |  9 ++-
- discord/ext/commands/core.py      | 20 ++++++-
+ discord/ext/commands/core.py      | 18 +++++-
  discord/ext/commands/default.py   | 96 +++++++++++++++++++++++++++++++
- 4 files changed, 120 insertions(+), 6 deletions(-)
+ 4 files changed, 119 insertions(+), 5 deletions(-)
  create mode 100644 discord/ext/commands/default.py
 
 diff --git a/discord/ext/commands/__init__.py b/discord/ext/commands/__init__.py
@@ -22,7 +22,7 @@ index 3da57d80..9efd96cd 100644
 +from .default import CustomDefault
  from .flags import *
 diff --git a/discord/ext/commands/converter.py b/discord/ext/commands/converter.py
-index 1f1828b1..78d1c9f6 100644
+index 5740a188..7733c82c 100644
 --- a/discord/ext/commands/converter.py
 +++ b/discord/ext/commands/converter.py
 @@ -44,6 +44,7 @@ from typing import (
@@ -33,7 +33,7 @@ index 1f1828b1..78d1c9f6 100644
  from .errors import *
  
  if TYPE_CHECKING:
-@@ -898,10 +899,12 @@ def _convert_to_bool(argument: str) -> bool:
+@@ -1018,10 +1019,12 @@ def _convert_to_bool(argument: str) -> bool:
  def get_converter(param: inspect.Parameter) -> Any:
      converter = param.annotation
      if converter is param.empty:
@@ -43,25 +43,25 @@ index 1f1828b1..78d1c9f6 100644
 +        if param.default is param.empty or param.default is None:
              converter = str
 +        elif (inspect.isclass(param.default) and issubclass(param.default, CustomDefault)) or isinstance(param.default, CustomDefault):
-+            converter = Union[param.default.converters]
+++            converter = Union[param.default.converters]
 +        else:
 +            converter = type(param.default)
      return converter
  
  
 diff --git a/discord/ext/commands/core.py b/discord/ext/commands/core.py
-index cb986e3b..15385c80 100644
+index 35b7e840..7b48bc28 100644
 --- a/discord/ext/commands/core.py
 +++ b/discord/ext/commands/core.py
-@@ -39,6 +39,7 @@ import discord
+@@ -50,6 +50,7 @@ import discord
  from .errors import *
  from .cooldowns import Cooldown, BucketType, CooldownMapping, MaxConcurrency, DynamicCooldownMapping
  from .converter import run_converters, get_converter, Greedy
 +from .default import CustomDefault
  from ._types import _BaseCommand
  from .cog import Cog
- 
-@@ -443,6 +444,19 @@ class Command(_BaseCommand):
+ from .context import Context
+@@ -529,6 +530,19 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
          finally:
              ctx.bot.dispatch('command_error', ctx, error)
  
@@ -78,10 +78,10 @@ index cb986e3b..15385c80 100644
 +            raise ConversionError(param.default, e) from e
 +        return param.default
 +
-     async def transform(self, ctx, param):
+     async def transform(self, ctx: Context, param: inspect.Parameter) -> Any:
          required = param.default is param.empty
          converter = get_converter(param)
-@@ -472,7 +486,7 @@ class Command(_BaseCommand):
+@@ -558,7 +572,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
                  if hasattr(converter, '__commands_is_flag__') and converter._can_be_constructible():
                      return await converter._construct_default(ctx)
                  raise MissingRequiredArgument(param)
@@ -90,16 +90,7 @@ index cb986e3b..15385c80 100644
  
          previous = view.index
          if consume_rest_is_special:
-@@ -501,7 +515,7 @@ class Command(_BaseCommand):
-                 result.append(value)
- 
-         if not result and not required:
--            return param.default
-+            return await self._resolve_default(ctx, param)
-         return result
- 
-     async def _transform_greedy_var_pos(self, ctx, param, converter):
-@@ -514,7 +528,7 @@ class Command(_BaseCommand):
+@@ -608,7 +622,7 @@ class Command(_BaseCommand, Generic[CogT, P, T]):
              view.index = previous
              raise RuntimeError() from None # break loop
          else:
@@ -211,5 +202,5 @@ index 00000000..8c1df005
 +    async def default(self, ctx, param):
 +        return self._callback(ctx, param)
 -- 
-2.30.2
+2.31.1
 

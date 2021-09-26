@@ -1,8 +1,8 @@
-FROM docker.io/gelbpunkt/python:latest
+FROM docker.io/gelbpunkt/python:3.10
 
 WORKDIR /build
 
-ENV MAKEFLAGS "-j 12"
+ENV MAKEFLAGS "-j 16"
 ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
@@ -13,15 +13,17 @@ COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-Fix-unknown-events.patch /tmp/
 COPY 0001-commands-custom-default-arguments.patch /tmp/
+COPY 0001-dispatch-more-raw-events.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev openssl-dev && \
-    curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal -y && source $HOME/.cargo/env; \
+    curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal --component rust-src -y && source $HOME/.cargo/env; \
     pip install -U pip wheel && \
     pip install maturin typing_extensions && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
+    pip download tomli && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
     rm Cargo.lock && \
@@ -88,8 +90,8 @@ RUN set -ex && \
     make cythonize && \
     pip wheel . && \
     cd .. && \
-    git clone https://github.com/aio-libs/aioredis && \
-    cd aioredis && \
+    git clone https://github.com/aio-libs/aioredis-py && \
+    cd aioredis-py && \
     sed -i "s:async-timeout:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
@@ -112,6 +114,7 @@ RUN set -ex && \
     cd discord.py && \
     git am -3 /tmp/0001-commands-custom-default-arguments.patch && \
     git am -3 /tmp/0001-Support-orjson.patch && \
+    git am -3 /tmp/0001-dispatch-more-raw-events.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
@@ -195,7 +198,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/zangy && \
     cd zangy && \
-    maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
+    CARGO_BUILD_TARGET=x86_64-unknown-linux-gnu maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
     pip install target/wheels/*.whl && \
     cd .. && \
     git clone https://github.com/daggy1234/polaroid && \

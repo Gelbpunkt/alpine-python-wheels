@@ -8,19 +8,6 @@ Subject: [PATCH] Fix aiohttp 4 compat
  wavelink/websocket.py | 7 -------
  2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/wavelink/client.py b/wavelink/client.py
-index da7f8f6..8057c4a 100644
---- a/wavelink/client.py
-+++ b/wavelink/client.py
-@@ -66,7 +66,7 @@ class Client:
-     def __init__(self, bot: Union[commands.Bot, commands.AutoShardedBot]):
-         self.bot = bot
-         self.loop = bot.loop or asyncio.get_event_loop()
--        self.session = aiohttp.ClientSession(loop=self.loop)
-+        self.session = aiohttp.ClientSession()
- 
-         self.nodes = {}
- 
 diff --git a/wavelink/websocket.py b/wavelink/websocket.py
 index b6f2ae2..64e1eaf 100644
 --- a/wavelink/websocket.py
