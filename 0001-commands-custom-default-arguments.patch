@@ -1,6 +1,6 @@
-From ca21cc69f0f1c02836aab236d646404697962c69 Mon Sep 17 00:00:00 2001
+From fae018bf3642710fec443f8f678a19a2f0731579 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <adrian@travitia.xyz>
-Date: Sun, 26 Sep 2021 10:58:09 +0200
+Date: Sun, 26 Sep 2021 12:31:19 +0200
 Subject: [PATCH 1/1] commands custom default arguments
 
 ---
@@ -22,7 +22,7 @@ index 3da57d80..9efd96cd 100644
 +from .default import CustomDefault
  from .flags import *
 diff --git a/discord/ext/commands/converter.py b/discord/ext/commands/converter.py
-index 5740a188..7733c82c 100644
+index 5740a188..8443b19e 100644
 --- a/discord/ext/commands/converter.py
 +++ b/discord/ext/commands/converter.py
 @@ -44,6 +44,7 @@ from typing import (
@@ -43,7 +43,7 @@ index 5740a188..7733c82c 100644
 +        if param.default is param.empty or param.default is None:
              converter = str
 +        elif (inspect.isclass(param.default) and issubclass(param.default, CustomDefault)) or isinstance(param.default, CustomDefault):
-++            converter = Union[param.default.converters]
++            converter = Union[param.default.converters]
 +        else:
 +            converter = type(param.default)
      return converter
