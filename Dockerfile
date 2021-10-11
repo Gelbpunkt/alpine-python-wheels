@@ -1,9 +1,9 @@
-FROM docker.io/gelbpunkt/python:3.10
+FROM docker.io/gelbpunkt/python:latest
 
 WORKDIR /build
 
 ENV MAKEFLAGS "-j 16"
-ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static"
+ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static -Z mir-opt-level=3 -Z unsound-mir-opts"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0001-Support-orjson.patch /tmp/
