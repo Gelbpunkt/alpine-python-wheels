@@ -6,18 +6,16 @@ ENV MAKEFLAGS "-j 16"
 ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static -Z mir-opt-level=3 -Z unsound-mir-opts"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
-COPY 0001-Support-orjson.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-Fix-unknown-events.patch /tmp/
-COPY 0001-commands-custom-default-arguments.patch /tmp/
-COPY 0001-dispatch-more-raw-events.patch /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev openssl-dev && \
+    git config --global pull.rebase false && \
     curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal --component rust-src -y && source $HOME/.cargo/env; \
     pip install -U pip wheel && \
     pip install maturin typing_extensions && \
@@ -110,11 +108,8 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone --single-branch -b master https://github.com/Rapptz/discord.py && \
+    git clone --single-branch -b master https://github.com/Gelbpunkt/discord.py && \
     cd discord.py && \
-    git am -3 /tmp/0001-commands-custom-default-arguments.patch && \
-    git am -3 /tmp/0001-Support-orjson.patch && \
-    git am -3 /tmp/0001-dispatch-more-raw-events.patch && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
