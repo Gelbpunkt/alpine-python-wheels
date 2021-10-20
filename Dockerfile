@@ -1,9 +1,11 @@
-FROM docker.io/gelbpunkt/python:latest
+FROM docker.io/gelbpunkt/python:3.11
 
 WORKDIR /build
 
 ENV MAKEFLAGS "-j 16"
 ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static -Z mir-opt-level=3 -Z unsound-mir-opts"
+ENV CFLAGS "-O3"
+ENV CXXFLAGS "-O3"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
@@ -11,10 +13,11 @@ COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-Fix-unknown-events.patch /tmp/
+COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
     apk upgrade --no-cache && \
-    apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev openssl-dev && \
+    apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev openssl-dev nodejs-current npm && \
     git config --global pull.rebase false && \
     curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal --component rust-src -y && source $HOME/.cargo/env; \
     pip install -U pip wheel && \
@@ -25,7 +28,6 @@ RUN set -ex && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
     rm Cargo.lock && \
-    sed -i 4d src/lib.rs && \
     maturin build --no-sdist --release --strip --interpreter python3 --manylinux off && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
@@ -47,6 +49,8 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/cython/cython && \
     cd cython && \
+    git pull origin pull/4414/merge --no-edit && \
+    sed -i -e 's/"longintrepr.h"/"cpython\/longintrepr.h"/g' Cython/Includes/cpython/longintrepr.pxd tests/compile/pylong.pyx Cython/Utility/ModuleSetupCode.c && \
     pip wheel . && \
     pip install *.whl && \
     CYTHON_VERSION=$(pip show cython | grep "Version" | cut -d' ' -f 2) && \
@@ -61,6 +65,7 @@ RUN set -ex && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
+    git pull origin pull/445/merge --no-edit && \
     sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py && \
     pip wheel . && \
     pip install *.whl && \
@@ -70,23 +75,38 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
+    git clone https://github.com/aio-libs/frozenlist && \
+    cd frozenlist && \
+    echo -e "cython==$CYTHON_VERSION" > requirements/cython.txt && \
+    make cythonize && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/aio-libs/yarl && \
+    cd yarl && \
+    echo -e "cython==$CYTHON_VERSION" > requirements/cython.txt && \
+    make cythonize && \
+    pip wheel . && \
+    pip install *.whl && \
+    cd .. && \
+    git clone https://github.com/aio-libs/aiosignal && \
+    cd aiosignal && \
+    pip wheel . --no-deps && \
+    pip install *.whl && \
+    cd .. && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
+    git pull origin pull/5364/merge --no-edit && \
     git submodule update --init --recursive && \
+    make generate-llhttp && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
     echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions==3.7.4.3" > requirements/cython.txt && \
     make cythonize && \
-    pip wheel .[speedups] && \
+    pip wheel -r /tmp/aiohttp.txt && \
+    python setup.py bdist_wheel && \
     pip install *.whl && \
+    pip install dist/*.whl && \
     TIMEOUT_VERSION=$(pip show async_timeout | grep "Version" | cut -d' ' -f 2) && \
-    cd .. && \
-    git clone https://github.com/aio-libs/aiohttp aiohttp-3 && \
-    cd aiohttp-3 && \
-    git checkout 3.7 && \
-    git submodule update --init --recursive && \
-    echo -e "-r multidict.txt\ncython==$CYTHON_VERSION" > requirements/cython.txt && \
-    make cythonize && \
-    pip wheel . && \
     cd .. && \
     git clone https://github.com/aio-libs/aioredis-py && \
     cd aioredis-py && \
