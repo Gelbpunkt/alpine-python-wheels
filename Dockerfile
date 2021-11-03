@@ -108,7 +108,7 @@ RUN set -ex && \
     git clone https://github.com/aio-libs/aioredis-py && \
     cd aioredis-py && \
     sed -i "s:async-timeout:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
-    pip wheel . && \
+    pip wheel .[hiredis] && \
     pip install *.whl && \
     cd .. && \
     git clone https://github.com/giampaolo/psutil && \
