@@ -21,7 +21,7 @@ RUN set -ex && \
     git config --global pull.rebase false && \
     curl -sSf https://sh.rustup.rs | sh -s -- --default-toolchain nightly --profile minimal --component rust-src -y && source $HOME/.cargo/env; \
     pip install -U pip wheel && \
-    pip install maturin typing_extensions && \
+    pip install "maturin>=0.12.0-beta.2" typing_extensions && \
     git config --global user.name "Jens Reidel" && \
     git config --global user.email "jens@troet.org" && \
     pip download tomli && \
@@ -49,8 +49,6 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/cython/cython && \
     cd cython && \
-    git pull origin pull/4414/merge --no-edit && \
-    sed -i -e 's/"longintrepr.h"/"cpython\/longintrepr.h"/g' Cython/Includes/cpython/longintrepr.pxd tests/compile/pylong.pyx Cython/Utility/ModuleSetupCode.c && \
     pip wheel . && \
     pip install *.whl && \
     CYTHON_VERSION=$(pip show cython | grep "Version" | cut -d' ' -f 2) && \
@@ -96,7 +94,6 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
-    git pull origin pull/5364/merge --no-edit && \
     git submodule update --init --recursive && \
     make generate-llhttp && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
