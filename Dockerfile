@@ -10,9 +10,7 @@ ENV CXXFLAGS "-O3"
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
-COPY 0001-Fix-aiohttp-4-compat.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
-COPY 0001-Fix-unknown-events.patch /tmp/
 COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
@@ -98,6 +96,7 @@ RUN set -ex && \
     make generate-llhttp && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
     echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions==3.7.4.3" > requirements/cython.txt && \
+    sed -i "s:-c requirements/constraints.txt::g" Makefile && \
     make cythonize && \
     pip wheel -r /tmp/aiohttp.txt && \
     python setup.py bdist_wheel && \
@@ -132,15 +131,6 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/Rapptz/discord-ext-menus && \
     cd discord-ext-menus && \
-    pip wheel . --no-deps && \
-    pip install --no-deps *.whl && \
-    cd .. && \
-    git clone https://github.com/PythonistaGuild/Wavelink && \
-    cd Wavelink && \
-    git am -3 /tmp/0001-Fix-aiohttp-4-compat.patch && \
-    git am -3 /tmp/0001-Fix-unknown-events.patch && \
-    rm requirements.txt && \
-    echo -e "aiohttp==4.0.0a1\ndiscord.py>=1.3.4" > requirements.txt && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
@@ -181,32 +171,6 @@ RUN set -ex && \
     cd aioscheduler && \
     pip wheel . && \                                                                               
     pip install *.whl && \      
-    cd .. && \
-    git clone https://github.com/aio-libs/aiohttp-session && \
-    cd aiohttp-session && \
-    pip wheel . --no-deps && \
-    pip install *.whl --no-deps && \
-    cd .. && \
-    git clone https://github.com/aio-libs/aiohttp-jinja2 && \
-    cd aiohttp-jinja2 && \
-    pip wheel . --no-deps && \
-    pip install *.whl --no-deps && \
-    cd .. && \
-    git clone https://github.com/pallets/jinja && \
-    cd jinja && \
-    pip wheel . && \    
-    pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/pyca/cryptography && \
-    cd cryptography && \
-    pip wheel . && \
-    pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/Devoxin/Lavalink.py && \
-    cd Lavalink.py && \
-    git checkout dev && \
-    pip wheel . --no-deps && \
-    pip install *.whl --no-deps && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/zangy && \
     cd zangy && \
