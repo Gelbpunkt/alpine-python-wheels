@@ -3,7 +3,7 @@ FROM docker.io/gelbpunkt/python:3.11
 WORKDIR /build
 
 ENV MAKEFLAGS "-j 16"
-ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static -Z mir-opt-level=3 -Z unsound-mir-opts"
+ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static"
 ENV CFLAGS "-O3"
 ENV CXXFLAGS "-O3"
 
@@ -26,7 +26,7 @@ RUN set -ex && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
     rm Cargo.lock && \
-    maturin build --no-sdist --release --strip --interpreter python3 --manylinux off && \
+    maturin build --no-sdist --release --strip --interpreter python3 --manylinux off --cargo-extra-args="--features=unstable-simd" && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
     cd lru-dict && \
@@ -93,7 +93,9 @@ RUN set -ex && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
+    wget https://github.com/Gelbpunkt/zlib-ng-alpine/raw/main/libz.so.1.2.11 -O /lib/libz.so.1.2.11 && \
     make generate-llhttp && \
+    wget https://github.com/Gelbpunkt/zlib-ng-alpine/raw/main/libz.so.1.2.11.zlib-ng -O /lib/libz.so.1.2.11 && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
     echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions==3.7.4.3" > requirements/cython.txt && \
     sed -i "s:-c requirements/constraints.txt::g" Makefile && \
