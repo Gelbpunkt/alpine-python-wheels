@@ -55,6 +55,7 @@ RUN set -ex && \
     cd asyncpg && \
     git submodule update --init --recursive && \
     sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py && \
+    rm pyproject.toml && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
