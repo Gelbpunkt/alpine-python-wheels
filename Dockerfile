@@ -132,11 +132,6 @@ RUN set -ex && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
-    git clone https://github.com/Rapptz/discord-ext-menus && \
-    cd discord-ext-menus && \
-    pip wheel . --no-deps && \
-    pip install --no-deps *.whl && \
-    cd .. && \
     git clone https://github.com/Gelbpunkt/aiowiki && \
     cd aiowiki && \
     rm requirements.txt && \
@@ -169,11 +164,6 @@ RUN set -ex && \
     cd humanize && \
     pip wheel . && \
     pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/Gelbpunkt/aioscheduler && \
-    cd aioscheduler && \
-    pip wheel . && \                                                                               
-    pip install *.whl && \      
     cd .. && \
     git clone https://github.com/Gelbpunkt/zangy && \
     cd zangy && \
