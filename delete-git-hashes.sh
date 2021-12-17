@@ -8,6 +8,3 @@ done
 devpi list discord-py --all | while read line; do
     echo "yes" | devpi remove $line
 done
-devpi list discord-ext-menus --all | while read line; do
-    echo "yes" | devpi remove $line
-done
