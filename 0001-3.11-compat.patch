@@ -1,0 +1,31 @@
+From 1ed45dd1160fb46ac431a6dba3821132cac0fdb9 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Tue, 21 Dec 2021 10:50:29 +0100
+Subject: [PATCH 1/1] 3.11 compat
+
+---
+ aioredis/exceptions.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/aioredis/exceptions.py b/aioredis/exceptions.py
+index e4c2ed1..7dc89f8 100644
+--- a/aioredis/exceptions.py
++++ b/aioredis/exceptions.py
+@@ -1,5 +1,4 @@
+ """Core exceptions raised by the Redis client"""
+-import asyncio
+ import builtins
+ 
+ 
+@@ -11,7 +10,7 @@ class ConnectionError(RedisError):
+     pass
+ 
+ 
+-class TimeoutError(asyncio.TimeoutError, builtins.TimeoutError, RedisError):
++class TimeoutError(builtins.TimeoutError, RedisError):
+     pass
+ 
+ 
+-- 
+2.33.1
+

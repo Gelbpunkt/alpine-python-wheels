@@ -11,6 +11,7 @@ COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
+COPY 0001-3.11-compat.patch /tmp/
 COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
@@ -34,10 +35,6 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/astanin/python-tabulate && \
     cd python-tabulate && \
-    pip wheel . && \
-    cd .. && \
-    git clone https://github.com/iomintz/import-expression-parser && \
-    cd import-expression-parser && \
     pip wheel . && \
     cd .. && \
     git clone https://github.com/niklasf/python-chess && \
@@ -109,6 +106,7 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/aio-libs/aioredis-py && \
     cd aioredis-py && \
+    git am -3 /tmp/0001-3.11-compat.patch && \
     sed -i "s:async-timeout:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
     pip wheel .[hiredis] && \
     pip install *.whl && \
