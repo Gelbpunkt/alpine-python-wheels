@@ -125,8 +125,8 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone --single-branch -b master https://github.com/Gelbpunkt/discord.py && \
-    cd discord.py && \
+    git clone --single-branch -b 2.0 https://github.com/Gelbpunkt/enhanced-discord.py && \
+    cd enhanced-discord.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
     cd .. && \
