@@ -91,9 +91,7 @@ RUN set -ex && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
     git submodule update --init --recursive && \
-    wget https://github.com/Gelbpunkt/zlib-ng-alpine/raw/main/libz.so.1.2.11 -O /lib/libz.so.1.2.11 && \
     make generate-llhttp && \
-    wget https://github.com/Gelbpunkt/zlib-ng-alpine/raw/main/libz.so.1.2.11.zlib-ng -O /lib/libz.so.1.2.11 && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
     echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions==3.7.4.3" > requirements/cython.txt && \
     sed -i "s:-c requirements/constraints.txt::g" Makefile && \
