@@ -12,6 +12,7 @@ COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-3.11-compat.patch /tmp/
+COPY 0001-orjson-fixes.patch /tmp/
 COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
@@ -26,12 +27,8 @@ RUN set -ex && \
     pip download tomli && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    rm Cargo.lock && \
+    git am -3 /tmp/0001-orjson-fixes.patch && \
     maturin build --no-sdist --release --strip --interpreter python3 --manylinux off --cargo-extra-args="--features=unstable-simd" && \
-    cd .. && \
-    git clone https://github.com/amitdev/lru-dict && \
-    cd lru-dict && \
-    pip wheel . && \
     cd .. && \
     git clone https://github.com/astanin/python-tabulate && \
     cd python-tabulate && \
@@ -71,7 +68,8 @@ RUN set -ex && \
     cd .. && \
     git clone https://github.com/aio-libs/frozenlist && \
     cd frozenlist && \
-    echo -e "cython==$CYTHON_VERSION" > requirements/cython.txt && \
+    echo -e "cython==$CYTHON_VERSION" > requirements/ci.txt && \
+    rm pyproject.toml && \
     make cythonize && \
     pip wheel . && \
     pip install *.whl && \
@@ -79,6 +77,7 @@ RUN set -ex && \
     git clone https://github.com/aio-libs/yarl && \
     cd yarl && \
     echo -e "cython==$CYTHON_VERSION" > requirements/cython.txt && \
+    rm pyproject.toml && \
     make cythonize && \
     pip wheel . && \
     pip install *.whl && \
@@ -127,6 +126,10 @@ RUN set -ex && \
     cd enhanced-discord.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
+    git revert c66b20fd26e4462a4b350378ed78c82cce73968e && \
+    git revert d23cd069c13f2881de2933f4666edf3b044099cf && \
+    sed -i "s:enhanced-discord.py:enhanced-discord.py-custom:g" setup.py && \
+    pip wheel . --no-deps && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/aiowiki && \
     cd aiowiki && \
@@ -160,17 +163,18 @@ RUN set -ex && \
     cd humanize && \
     pip wheel . && \
     pip install *.whl && \
-    cd .. && \
-    git clone https://github.com/Gelbpunkt/zangy && \
-    cd zangy && \
-    CARGO_BUILD_TARGET=x86_64-unknown-linux-gnu maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
-    pip install target/wheels/*.whl && \
-    cd .. && \
-    git clone https://github.com/daggy1234/polaroid && \
-    cd polaroid && \
-    maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
-    pip install target/wheels/*.whl && \
     cd ..
+    #cd .. && \
+    #git clone https://github.com/Gelbpunkt/zangy && \
+    #cd zangy && \
+    #CARGO_BUILD_TARGET=x86_64-unknown-linux-gnu maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
+    #pip install target/wheels/*.whl && \
+    #cd .. && \
+    #git clone https://github.com/daggy1234/polaroid && \
+    #cd polaroid && \
+    #maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
+    #pip install target/wheels/*.whl && \
+    #cd ..
 
 # allow for build caching
 RUN mkdir /wheels && \

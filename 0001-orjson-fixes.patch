@@ -1,0 +1,127 @@
+From 60cb763e90b53820f7ba9ddcf3099931878eb079 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Mon, 24 Jan 2022 17:14:01 +0100
+Subject: [PATCH 1/1] orjson fixes
+
+---
+ Cargo.lock | 27 +++++++++------------------
+ Cargo.toml |  8 +++++++-
+ 2 files changed, 16 insertions(+), 19 deletions(-)
+
+diff --git a/Cargo.lock b/Cargo.lock
+index eeafd6f..32d6ec7 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -49,12 +49,6 @@ dependencies = [
+  "packed_simd_2",
+ ]
+ 
+-[[package]]
+-name = "cfg-if"
+-version = "0.1.10"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
+-
+ [[package]]
+ name = "cfg-if"
+ version = "1.0.0"
+@@ -77,7 +71,7 @@ version = "0.8.30"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "7896dc8abb250ffdda33912550faa54c88ec8b998dec0b2c55ab224921ce11df"
+ dependencies = [
+- "cfg-if 1.0.0",
++ "cfg-if",
+  "packed_simd_2",
+ ]
+ 
+@@ -87,7 +81,7 @@ version = "0.2.4"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "418d37c8b1d42553c93648be529cb70f920d3baf8ef469b74b9638df426e0b4c"
+ dependencies = [
+- "cfg-if 1.0.0",
++ "cfg-if",
+  "libc",
+  "wasi",
+ ]
+@@ -104,7 +98,7 @@ version = "0.1.12"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "7a5bbe824c507c5da5956355e86a746d82e0e1464f65d862cc5e71da70e94b2c"
+ dependencies = [
+- "cfg-if 1.0.0",
++ "cfg-if",
+ ]
+ 
+ [[package]]
+@@ -183,10 +177,9 @@ dependencies = [
+ [[package]]
+ name = "packed_simd_2"
+ version = "0.3.6"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "71c0c06716cfc81616fa8e22b721ce92fecd594508bc0eb3d04ae3ef35ac10c5"
++source = "git+https://github.com/flock-lab/packed_simd?branch=flock#d017986ceb44b83b2d90205226c1d26c1f76bca1"
+ dependencies = [
+- "cfg-if 0.1.10",
++ "cfg-if",
+  "libm",
+ ]
+ 
+@@ -207,7 +200,7 @@ version = "0.8.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "d76e8e1493bcac0d2766c42737f34458f1c8c50c0d23bcb24ea953affb273216"
+ dependencies = [
+- "cfg-if 1.0.0",
++ "cfg-if",
+  "instant",
+  "libc",
+  "redox_syscall",
+@@ -218,10 +211,9 @@ dependencies = [
+ [[package]]
+ name = "pyo3"
+ version = "0.15.1"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "7cf01dbf1c05af0a14c7779ed6f3aa9deac9c3419606ac9de537a2d649005720"
++source = "git+https://github.com/PyO3/pyo3#d1542a8a7912487bf2b58e4d2f0eb88a1e6f467d"
+ dependencies = [
+- "cfg-if 1.0.0",
++ "cfg-if",
+  "libc",
+  "parking_lot",
+  "pyo3-build-config",
+@@ -230,8 +222,7 @@ dependencies = [
+ [[package]]
+ name = "pyo3-build-config"
+ version = "0.15.1"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "dbf9e4d128bfbddc898ad3409900080d8d5095c379632fbbfbb9c8cfb1fb852b"
++source = "git+https://github.com/PyO3/pyo3#d1542a8a7912487bf2b58e4d2f0eb88a1e6f467d"
+ dependencies = [
+  "once_cell",
+ ]
+diff --git a/Cargo.toml b/Cargo.toml
+index 404702d..0cd1534 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -71,13 +71,19 @@ encoding_rs = { version = "0.8", default_features = false }
+ inlinable_string = { version = "0.1" }
+ itoa = { version = "1", default_features = false }
+ once_cell = { version = "1", default_features = false }
+-pyo3 = { version = "0.15", default_features = false, features = ["extension-module"]}
++pyo3 = { git = "https://github.com/PyO3/pyo3", default-features = false, features = [
++    "extension-module",
++    "nightly"
++] }
+ ryu = { version = "1", default_features = false }
+ serde = { version = "1", default_features = false }
+ serde_json = { version = "^1.0.68", default_features = false, features = ["std", "float_roundtrip"] }
+ simdutf8 = { version = "0.1", default_features = false, features = ["std"] }
+ smallvec = { version = "^1.8", default_features = false, features = ["union", "write"] }
+ 
++[patch.crates-io]
++packed_simd_2 = { git = "https://github.com/flock-lab/packed_simd", branch = "flock" }
++
+ [profile.release]
+ codegen-units = 1
+ debug = false
+-- 
+2.34.1
+
