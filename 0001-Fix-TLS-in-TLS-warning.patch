@@ -1,0 +1,26 @@
+From 6fa5eaff462c7ca35d36e40dc74485076a192462 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Mon, 24 Jan 2022 21:02:54 +0100
+Subject: [PATCH 1/1] Fix TLS in TLS warning
+
+---
+ aiohttp/connector.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/aiohttp/connector.py b/aiohttp/connector.py
+index 64f34142..da7aa29a 100644
+--- a/aiohttp/connector.py
++++ b/aiohttp/connector.py
+@@ -1180,7 +1180,8 @@ class TCPConnector(BaseConnector):
+                 proxy_req.headers[hdrs.PROXY_AUTHORIZATION] = auth
+ 
+         if req.is_ssl():
+-            self._warn_about_tls_in_tls(transport, req)
++            if proxy_req.is_ssl():
++                self._warn_about_tls_in_tls(transport, req)
+ 
+             # For HTTPS requests over HTTP proxy
+             # we must notify proxy to tunnel connection
+-- 
+2.34.1
+

@@ -13,6 +13,7 @@ COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-3.11-compat.patch /tmp/
 COPY 0001-orjson-fixes.patch /tmp/
+COPY 0001-Fix-TLS-in-TLS-warning.patch /tmp/
 COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
@@ -29,6 +30,10 @@ RUN set -ex && \
     cd orjson && \
     git am -3 /tmp/0001-orjson-fixes.patch && \
     maturin build --no-sdist --release --strip --interpreter python3 --manylinux off --cargo-extra-args="--features=unstable-simd" && \
+    cd .. && \
+    git clone https://github.com/amitdev/lru-dict && \
+    cd lru-dict && \
+    pip wheel . && \
     cd .. && \
     git clone https://github.com/astanin/python-tabulate && \
     cd python-tabulate && \
@@ -92,6 +97,7 @@ RUN set -ex && \
     git submodule update --init --recursive && \
     make generate-llhttp && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
+    git am -3 /tmp/0001-Fix-TLS-in-TLS-warning.patch && \
     echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions==3.7.4.3" > requirements/cython.txt && \
     sed -i "s:-c requirements/constraints.txt::g" Makefile && \
     make cythonize && \
