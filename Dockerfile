@@ -14,6 +14,8 @@ COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-3.11-compat.patch /tmp/
 COPY 0001-orjson-fixes.patch /tmp/
 COPY 0001-Fix-TLS-in-TLS-warning.patch /tmp/
+COPY 0001-Remove-deprecated-things.patch /tmp/
+COPY 0001-Remove-JSON-encoders-and-decoders.patch /tmp/
 COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
@@ -107,10 +109,11 @@ RUN set -ex && \
     pip install dist/*.whl && \
     TIMEOUT_VERSION=$(pip show async_timeout | grep "Version" | cut -d' ' -f 2) && \
     cd .. && \
-    git clone https://github.com/aio-libs/aioredis-py && \
-    cd aioredis-py && \
-    git am -3 /tmp/0001-3.11-compat.patch && \
-    sed -i "s:async-timeout:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
+    git clone https://github.com/redis/redis-py && \
+    cd redis-py && \
+    git am -3 /tmp/0001-Remove-deprecated-things.patch && \
+    git am -3 /tmp/0001-Remove-JSON-encoders-and-decoders.patch && \
+    sed -i "s:async-timeout>=4.0.2:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
     pip wheel .[hiredis] && \
     pip install *.whl && \
     cd .. && \
@@ -128,13 +131,13 @@ RUN set -ex && \
     pip wheel . && \
     pip install *.whl && \
     cd .. && \
-    git clone --single-branch -b 2.0 https://github.com/Gelbpunkt/enhanced-discord.py && \
-    cd enhanced-discord.py && \
+    git clone --single-branch -b master https://github.com/Gelbpunkt/discord.py && \
+    cd discord.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
-    git revert c66b20fd26e4462a4b350378ed78c82cce73968e && \
-    git revert d23cd069c13f2881de2933f4666edf3b044099cf && \
-    sed -i "s:enhanced-discord.py:enhanced-discord.py-custom:g" setup.py && \
+    git revert c2ab4ff2457c89e51606e65ce9365d38c2834c06 && \
+    git revert f0dc0fb8e2ac6ca4ac1fdbea048f0f625ebef124 && \
+    sed -i "s:discord.py:discord.py-custom:g" setup.py && \
     pip wheel . --no-deps && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/aiowiki && \

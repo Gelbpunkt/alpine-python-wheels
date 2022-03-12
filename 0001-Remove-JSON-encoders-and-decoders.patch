@@ -1,0 +1,112 @@
+From 56442188aad389b28a8d10322e5bfea8ab5005f7 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Tue, 22 Feb 2022 22:27:10 +0100
+Subject: [PATCH 1/1] Remove JSON encoders and decoders
+
+---
+ redis/commands/json/__init__.py | 25 ++++---------------------
+ redis/commands/redismodules.py  |  6 +++---
+ 2 files changed, 7 insertions(+), 24 deletions(-)
+
+diff --git a/redis/commands/json/__init__.py b/redis/commands/json/__init__.py
+index 12c0648..db66e5d 100644
+--- a/redis/commands/json/__init__.py
++++ b/redis/commands/json/__init__.py
+@@ -1,4 +1,4 @@
+-from json import JSONDecodeError, JSONDecoder, JSONEncoder
++from json import JSONDecodeError, dumps, loads
+ 
+ import redis
+ 
+@@ -10,29 +10,15 @@ from .decoders import bulk_of_jsons, decode_list
+ class JSON(JSONCommands):
+     """
+     Create a client for talking to json.
+-
+-    :param decoder:
+-    :type json.JSONDecoder: An instance of json.JSONDecoder
+-
+-    :param encoder:
+-    :type json.JSONEncoder: An instance of json.JSONEncoder
+     """
+ 
+     def __init__(
+         self,
+         client,
+         version=None,
+-        decoder=JSONDecoder(),
+-        encoder=JSONEncoder(),
+     ):
+         """
+         Create a client for talking to json.
+-
+-        :param decoder:
+-        :type json.JSONDecoder: An instance of json.JSONDecoder
+-
+-        :param encoder:
+-        :type json.JSONEncoder: An instance of json.JSONEncoder
+         """
+         # Set the module commands' callbacks
+         self.MODULE_CALLBACKS = {
+@@ -66,22 +52,19 @@ class JSON(JSONCommands):
+         for key, value in self.MODULE_CALLBACKS.items():
+             self.client.set_response_callback(key, value)
+ 
+-        self.__encoder__ = encoder
+-        self.__decoder__ = decoder
+-
+     def _decode(self, obj):
+         """Get the decoder."""
+         if obj is None:
+             return obj
+ 
+         try:
+-            x = self.__decoder__.decode(obj)
++            x = loads(obj)
+             if x is None:
+                 raise TypeError
+             return x
+         except TypeError:
+             try:
+-                return self.__decoder__.decode(obj.decode())
++                return loads(obj.decode())
+             except AttributeError:
+                 return decode_list(obj)
+         except (AttributeError, JSONDecodeError):
+@@ -89,7 +72,7 @@ class JSON(JSONCommands):
+ 
+     def _encode(self, obj):
+         """Get the encoder."""
+-        return self.__encoder__.encode(obj)
++        return dumps(obj)
+ 
+     def pipeline(self, transaction=True, shard_hint=None):
+         """Creates a pipeline for the JSON module, that can be used for executing
+diff --git a/redis/commands/redismodules.py b/redis/commands/redismodules.py
+index eafd650..0371034 100644
+--- a/redis/commands/redismodules.py
++++ b/redis/commands/redismodules.py
+@@ -1,4 +1,4 @@
+-from json import JSONDecoder, JSONEncoder
++from json import loads, dumps
+ 
+ 
+ class RedisModuleCommands:
+@@ -6,12 +6,12 @@ class RedisModuleCommands:
+     modules into the command namepsace.
+     """
+ 
+-    def json(self, encoder=JSONEncoder(), decoder=JSONDecoder()):
++    def json(self):
+         """Access the json namespace, providing support for redis json."""
+ 
+         from .json import JSON
+ 
+-        jj = JSON(client=self, encoder=encoder, decoder=decoder)
++        jj = JSON(client=self)
+         return jj
+ 
+     def ft(self, index_name="idx"):
+-- 
+2.35.1
+
