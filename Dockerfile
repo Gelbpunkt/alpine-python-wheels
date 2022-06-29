@@ -1,4 +1,4 @@
-FROM docker.io/gelbpunkt/python:3.11
+FROM docker.io/gelbpunkt/python:3.12
 
 WORKDIR /build
 
@@ -12,7 +12,6 @@ COPY 0002-Support-orjson.patch /tmp/
 COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-3.11-compat.patch /tmp/
-COPY 0001-orjson-fixes.patch /tmp/
 COPY 0001-Fix-TLS-in-TLS-warning.patch /tmp/
 COPY 0001-Remove-deprecated-things.patch /tmp/
 COPY 0001-Remove-JSON-encoders-and-decoders.patch /tmp/
@@ -30,15 +29,10 @@ RUN set -ex && \
     pip download tomli && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    git am -3 /tmp/0001-orjson-fixes.patch && \
-    maturin build --no-sdist --release --strip --interpreter python3 --manylinux off --cargo-extra-args="--features=unstable-simd" && \
+    maturin build --release --strip --interpreter python3 --manylinux off --features=unstable-simd && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
     cd lru-dict && \
-    pip wheel . && \
-    cd .. && \
-    git clone https://github.com/astanin/python-tabulate && \
-    cd python-tabulate && \
     pip wheel . && \
     cd .. && \
     git clone https://github.com/niklasf/python-chess && \
@@ -135,8 +129,8 @@ RUN set -ex && \
     cd discord.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
-    git revert c2ab4ff2457c89e51606e65ce9365d38c2834c06 && \
-    git revert f0dc0fb8e2ac6ca4ac1fdbea048f0f625ebef124 && \
+    git revert b18c2167a33380bf6612ea8ad1d609c2bbd4a5bf && \
+    git revert 05089044e9d402c7918d5f96d82908becf231950 && \
     sed -i "s:discord.py:discord.py-custom:g" setup.py && \
     pip wheel . --no-deps && \
     cd .. && \

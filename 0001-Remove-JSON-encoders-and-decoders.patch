@@ -1,15 +1,15 @@
-From 56442188aad389b28a8d10322e5bfea8ab5005f7 Mon Sep 17 00:00:00 2001
+From 265b86413fca6ff413054d274dcd4d5979fc1d85 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <adrian@travitia.xyz>
-Date: Tue, 22 Feb 2022 22:27:10 +0100
-Subject: [PATCH 1/1] Remove JSON encoders and decoders
+Date: Thu, 30 Jun 2022 00:07:05 +0200
+Subject: [PATCH] Remove JSON encoders and decoders
 
 ---
- redis/commands/json/__init__.py | 25 ++++---------------------
+ redis/commands/json/__init__.py | 27 +++++----------------------
  redis/commands/redismodules.py  |  6 +++---
- 2 files changed, 7 insertions(+), 24 deletions(-)
+ 2 files changed, 8 insertions(+), 25 deletions(-)
 
 diff --git a/redis/commands/json/__init__.py b/redis/commands/json/__init__.py
-index 12c0648..db66e5d 100644
+index 7d55023..5c16269 100644
 --- a/redis/commands/json/__init__.py
 +++ b/redis/commands/json/__init__.py
 @@ -1,4 +1,4 @@
@@ -18,7 +18,7 @@ index 12c0648..db66e5d 100644
  
  import redis
  
-@@ -10,29 +10,15 @@ from .decoders import bulk_of_jsons, decode_list
+@@ -10,25 +10,11 @@ from .decoders import bulk_of_jsons, decode_list
  class JSON(JSONCommands):
      """
      Create a client for talking to json.
@@ -30,13 +30,10 @@ index 12c0648..db66e5d 100644
 -    :type json.JSONEncoder: An instance of json.JSONEncoder
      """
  
-     def __init__(
-         self,
-         client,
-         version=None,
--        decoder=JSONDecoder(),
--        encoder=JSONEncoder(),
-     ):
+-    def __init__(
+-        self, client, version=None, decoder=JSONDecoder(), encoder=JSONEncoder()
+-    ):
++    def __init__(self, client, version=None):
          """
          Create a client for talking to json.
 -
@@ -48,7 +45,7 @@ index 12c0648..db66e5d 100644
          """
          # Set the module commands' callbacks
          self.MODULE_CALLBACKS = {
-@@ -66,22 +52,19 @@ class JSON(JSONCommands):
+@@ -62,22 +48,19 @@ class JSON(JSONCommands):
          for key, value in self.MODULE_CALLBACKS.items():
              self.client.set_response_callback(key, value)
  
@@ -73,7 +70,7 @@ index 12c0648..db66e5d 100644
              except AttributeError:
                  return decode_list(obj)
          except (AttributeError, JSONDecodeError):
-@@ -89,7 +72,7 @@ class JSON(JSONCommands):
+@@ -85,7 +68,7 @@ class JSON(JSONCommands):
  
      def _encode(self, obj):
          """Get the encoder."""
@@ -83,7 +80,7 @@ index 12c0648..db66e5d 100644
      def pipeline(self, transaction=True, shard_hint=None):
          """Creates a pipeline for the JSON module, that can be used for executing
 diff --git a/redis/commands/redismodules.py b/redis/commands/redismodules.py
-index eafd650..0371034 100644
+index 875f3fc..893d24d 100644
 --- a/redis/commands/redismodules.py
 +++ b/redis/commands/redismodules.py
 @@ -1,4 +1,4 @@
@@ -93,7 +90,7 @@ index eafd650..0371034 100644
  
  class RedisModuleCommands:
 @@ -6,12 +6,12 @@ class RedisModuleCommands:
-     modules into the command namepsace.
+     modules into the command namespace.
      """
  
 -    def json(self, encoder=JSONEncoder(), decoder=JSONDecoder()):
@@ -108,5 +105,5 @@ index eafd650..0371034 100644
  
      def ft(self, index_name="idx"):
 -- 
-2.35.1
+2.36.1
 

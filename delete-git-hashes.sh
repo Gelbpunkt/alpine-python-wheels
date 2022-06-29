@@ -8,6 +8,6 @@ done
 devpi list discord-py --all | while read line; do
     echo "yes" | devpi remove $line
 done
-devpi list enhanced-discord-py --all | while read line; do
+devpi list discord-py-custom --all | while read line; do
     echo "yes" | devpi remove $line
 done
