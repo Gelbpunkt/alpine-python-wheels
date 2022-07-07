@@ -1,0 +1,42 @@
+From d68e5601323cc1bdcdccd4a34ce25f86c6999733 Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Thu, 30 Jun 2022 16:06:29 +0200
+Subject: [PATCH] Build optimizations
+
+---
+ .cargo/config.toml | 6 ++++++
+ Cargo.toml         | 3 ++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+ create mode 100644 .cargo/config.toml
+
+diff --git a/.cargo/config.toml b/.cargo/config.toml
+new file mode 100644
+index 0000000..c9502f3
+--- /dev/null
++++ b/.cargo/config.toml
+@@ -0,0 +1,6 @@
++[unstable]
++build-std = ["std", "panic_abort"]
++build-std-features = ["panic_immediate_abort"]
++
++[target.x86_64-unknown-linux-musl]
++rustflags = ["-L", "native=/usr/lib", "-Z", "mir-opt-level=3", "-C", "target-cpu=znver3"]
+diff --git a/Cargo.toml b/Cargo.toml
+index b39569c..9aaee95 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -91,9 +91,10 @@ pyo3-build-config = "^0.16.5"
+ codegen-units = 1
+ debug = false
+ incremental = false
+-lto = "thin"
++lto = true
+ opt-level = 3
+ panic = "abort"
++debug-assertions = false
+ 
+ [profile.release.build-override]
+ opt-level = 0
+-- 
+2.36.1
+

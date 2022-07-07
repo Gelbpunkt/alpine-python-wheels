@@ -2,6 +2,7 @@ FROM docker.io/gelbpunkt/python:3.12
 
 WORKDIR /build
 
+ENV CARGO_BUILD_TARGET "x86_64-unknown-linux-musl"
 ENV MAKEFLAGS "-j 16"
 ENV RUSTFLAGS "-C target-cpu=native -Z mutable-noalias -C target-feature=-crt-static"
 ENV CFLAGS "-O3"
@@ -15,6 +16,8 @@ COPY 0001-3.11-compat.patch /tmp/
 COPY 0001-Fix-TLS-in-TLS-warning.patch /tmp/
 COPY 0001-Remove-deprecated-things.patch /tmp/
 COPY 0001-Remove-JSON-encoders-and-decoders.patch /tmp/
+COPY 0001-Support-Python-3.11-create_task-context.patch /tmp/
+COPY 0001-Build-optimizations.patch /tmp/
 COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
@@ -29,7 +32,8 @@ RUN set -ex && \
     pip download tomli && \
     git clone https://github.com/ijl/orjson && \
     cd orjson && \
-    maturin build --release --strip --interpreter python3 --manylinux off --features=unstable-simd && \
+    git am -3 /tmp/0001-Build-optimizations.patch && \
+    maturin build --release --strip --interpreter python3 --manylinux off --features=unstable-simd,yyjson && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
     cd lru-dict && \
@@ -57,6 +61,7 @@ RUN set -ex && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
     git submodule update --init --recursive && \
+    git am -3 /tmp/0001-Support-Python-3.11-create_task-context.patch && \
     git pull origin pull/445/merge --no-edit && \
     sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py && \
     pip wheel . && \
