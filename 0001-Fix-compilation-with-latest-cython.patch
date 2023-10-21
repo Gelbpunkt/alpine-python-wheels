@@ -1,0 +1,90 @@
+From ea26f0f4541792a80a02b2a6fc0819c6f51c977a Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Sun, 5 Feb 2023 14:09:18 +0100
+Subject: [PATCH] Fix compilation with latest cython
+
+Signed-off-by: Jens Reidel <adrian@travitia.xyz>
+---
+ uvloop/includes/uv.pxd | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/uvloop/includes/uv.pxd b/uvloop/includes/uv.pxd
+index 595ff89..fb5f3be 100644
+--- a/uvloop/includes/uv.pxd
++++ b/uvloop/includes/uv.pxd
+@@ -226,45 +226,45 @@ cdef extern from "uv.h" nogil:
+     const char* uv_strerror(int err)
+     const char* uv_err_name(int err)
+ 
+-    ctypedef void (*uv_walk_cb)(uv_handle_t* handle, void* arg) with gil
++    ctypedef void (*uv_walk_cb)(uv_handle_t* handle, void* arg) except * with gil
+ 
+-    ctypedef void (*uv_close_cb)(uv_handle_t* handle) with gil
+-    ctypedef void (*uv_idle_cb)(uv_idle_t* handle) with gil
+-    ctypedef void (*uv_check_cb)(uv_check_t* handle) with gil
++    ctypedef void (*uv_close_cb)(uv_handle_t* handle) except * with gil
++    ctypedef void (*uv_idle_cb)(uv_idle_t* handle) except * with gil
++    ctypedef void (*uv_check_cb)(uv_check_t* handle) except * with gil
+     ctypedef void (*uv_signal_cb)(uv_signal_t* handle, int signum) with gil
+-    ctypedef void (*uv_async_cb)(uv_async_t* handle) with gil
+-    ctypedef void (*uv_timer_cb)(uv_timer_t* handle) with gil
+-    ctypedef void (*uv_connection_cb)(uv_stream_t* server, int status) with gil
++    ctypedef void (*uv_async_cb)(uv_async_t* handle) except * with gil
++    ctypedef void (*uv_timer_cb)(uv_timer_t* handle) except * with gil
++    ctypedef void (*uv_connection_cb)(uv_stream_t* server, int status) except * with gil
+     ctypedef void (*uv_alloc_cb)(uv_handle_t* handle,
+                                  size_t suggested_size,
+-                                 uv_buf_t* buf) with gil
++                                 uv_buf_t* buf) except * with gil
+     ctypedef void (*uv_read_cb)(uv_stream_t* stream,
+                                 ssize_t nread,
+-                                const uv_buf_t* buf) with gil
+-    ctypedef void (*uv_write_cb)(uv_write_t* req, int status) with gil
++                                const uv_buf_t* buf) except * with gil
++    ctypedef void (*uv_write_cb)(uv_write_t* req, int status) except * with gil
+     ctypedef void (*uv_getaddrinfo_cb)(uv_getaddrinfo_t* req,
+                                        int status,
+-                                       system.addrinfo* res) with gil
++                                       system.addrinfo* res) except * with gil
+     ctypedef void (*uv_getnameinfo_cb)(uv_getnameinfo_t* req,
+                                        int status,
+                                        const char* hostname,
+-                                       const char* service) with gil
+-    ctypedef void (*uv_shutdown_cb)(uv_shutdown_t* req, int status) with gil
++                                       const char* service) except * with gil
++    ctypedef void (*uv_shutdown_cb)(uv_shutdown_t* req, int status) except * with gil
+     ctypedef void (*uv_poll_cb)(uv_poll_t* handle,
+-                                int status, int events) with gil
++                                int status, int events) except * with gil
+ 
+-    ctypedef void (*uv_connect_cb)(uv_connect_t* req, int status) with gil
++    ctypedef void (*uv_connect_cb)(uv_connect_t* req, int status) except * with gil
+ 
+-    ctypedef void (*uv_udp_send_cb)(uv_udp_send_t* req, int status) with gil
++    ctypedef void (*uv_udp_send_cb)(uv_udp_send_t* req, int status) except * with gil
+     ctypedef void (*uv_udp_recv_cb)(uv_udp_t* handle,
+                                     ssize_t nread,
+                                     const uv_buf_t* buf,
+                                     const system.sockaddr* addr,
+-                                    unsigned flags) with gil
++                                    unsigned flags) except * with gil
+     ctypedef void (*uv_fs_event_cb)(uv_fs_event_t* handle,
+                                     const char *filename,
+                                     int events,
+-                                    int status) with gil
++                                    int status) except * with gil
+ 
+     # Generic request functions
+     int uv_cancel(uv_req_t* req)
+@@ -460,7 +460,7 @@ cdef extern from "uv.h" nogil:
+     # Process
+ 
+     ctypedef void (*uv_exit_cb)(uv_process_t*, int64_t exit_status,
+-                                int term_signal) with gil
++                                int term_signal) except * with gil
+ 
+     ctypedef enum uv_process_flags:
+         UV_PROCESS_SETUID = 1,
+-- 
+2.39.1
+

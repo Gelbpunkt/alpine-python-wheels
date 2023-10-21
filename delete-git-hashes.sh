@@ -1,7 +1,7 @@
 #!/bin/sh
 ARCH=$(uname -m)
 devpi list asyncpg --all | while read line; do
-    if [ -z "${line##*cp311*}" ] && [ -z "${line##*$ARCH*}" ]; then
+    if [ -z "${line##*cp312*}" ] && [ -z "${line##*$ARCH*}" ]; then
         echo "yes" | devpi remove $line
     fi
 done

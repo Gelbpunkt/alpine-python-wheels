@@ -1,6 +1,6 @@
-From 265b86413fca6ff413054d274dcd4d5979fc1d85 Mon Sep 17 00:00:00 2001
+From 5a652fca177b27c5bb0accd09f5f69ceed6f2096 Mon Sep 17 00:00:00 2001
 From: Jens Reidel <adrian@travitia.xyz>
-Date: Thu, 30 Jun 2022 00:07:05 +0200
+Date: Sun, 5 Feb 2023 14:41:06 +0100
 Subject: [PATCH] Remove JSON encoders and decoders
 
 ---
@@ -80,7 +80,7 @@ index 7d55023..5c16269 100644
      def pipeline(self, transaction=True, shard_hint=None):
          """Creates a pipeline for the JSON module, that can be used for executing
 diff --git a/redis/commands/redismodules.py b/redis/commands/redismodules.py
-index 875f3fc..893d24d 100644
+index 7e2045a..3aaf4c3 100644
 --- a/redis/commands/redismodules.py
 +++ b/redis/commands/redismodules.py
 @@ -1,4 +1,4 @@
@@ -105,5 +105,5 @@ index 875f3fc..893d24d 100644
  
      def ft(self, index_name="idx"):
 -- 
-2.36.1
+2.39.1
 

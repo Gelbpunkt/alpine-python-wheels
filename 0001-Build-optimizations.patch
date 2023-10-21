@@ -20,7 +20,7 @@ index 0000000..c9502f3
 +build-std-features = ["panic_immediate_abort"]
 +
 +[target.x86_64-unknown-linux-musl]
-+rustflags = ["-L", "native=/usr/lib", "-Z", "mir-opt-level=3", "-C", "target-cpu=znver3"]
++rustflags = ["-L", "native=/usr/lib", "-C", "target-cpu=znver3"]
 diff --git a/Cargo.toml b/Cargo.toml
 index b39569c..9aaee95 100644
 --- a/Cargo.toml

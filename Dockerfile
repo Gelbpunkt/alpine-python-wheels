@@ -10,17 +10,19 @@ ENV CXXFLAGS "-O3"
 
 COPY 0001-Patch-677-ugly.patch /tmp/
 COPY 0002-Support-orjson.patch /tmp/
-COPY 0001-Support-relative-date-floats.patch /tmp/
 COPY 0001-aiohttp-orjson.patch /tmp/
 COPY 0001-3.11-compat.patch /tmp/
 COPY 0001-Fix-TLS-in-TLS-warning.patch /tmp/
-COPY 0001-Remove-deprecated-things.patch /tmp/
 COPY 0001-Remove-JSON-encoders-and-decoders.patch /tmp/
-COPY 0001-Support-Python-3.11-create_task-context.patch /tmp/
 COPY 0001-Build-optimizations.patch /tmp/
+COPY 0001-Fix-compilation-with-latest-cython.patch /tmp/
+COPY 0001-Sync-setup.cfg.patch /tmp/
+COPY 0001-Add-thread-timeout-for-loop.shutdown_default_executo.patch /tmp/
+COPY 0001-aiohttp-4.0-changes.patch /tmp/
 COPY aiohttp.txt /tmp/
 
 RUN set -ex && \
+    mkdir /wheels && \
     apk upgrade --no-cache && \
     apk add --no-cache --virtual .build-deps git gcc libgcc g++ musl-dev linux-headers make automake libtool m4 autoconf curl libffi-dev openssl-dev nodejs-current npm && \
     git config --global pull.rebase false && \
@@ -34,43 +36,48 @@ RUN set -ex && \
     cd orjson && \
     git am -3 /tmp/0001-Build-optimizations.patch && \
     maturin build --release --strip --interpreter python3 --manylinux off --features=unstable-simd,yyjson && \
+    cp target/wheels/*.whl /wheels && \
     cd .. && \
     git clone https://github.com/amitdev/lru-dict && \
     cd lru-dict && \
     pip wheel . && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/niklasf/python-chess && \
     cd python-chess && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
-    git clone https://github.com/cython/cython && \
+    git clone --single-branch https://github.com/cython/cython && \
     cd cython && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     CYTHON_VERSION=$(pip show cython | grep "Version" | cut -d' ' -f 2) && \
     cd .. && \
     git clone https://github.com/MagicStack/asyncpg && \
     cd asyncpg && \
     git submodule update --init --recursive && \
-    sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py && \
-    rm pyproject.toml && \
+    sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py pyproject.toml && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/MagicStack/uvloop && \
     cd uvloop && \
+    git pull origin pull/507/head --no-edit && \
     git submodule update --init --recursive && \
-    git am -3 /tmp/0001-Support-Python-3.11-create_task-context.patch && \
-    git pull origin pull/445/merge --no-edit && \
-    sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py && \
+    sed -i "s:Cython(.*):Cython==$CYTHON_VERSION:g" setup.py pyproject.toml && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/aio-libs/multidict && \
     cd multidict && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/aio-libs/frozenlist && \
     cd frozenlist && \
@@ -79,6 +86,7 @@ RUN set -ex && \
     make cythonize && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/aio-libs/yarl && \
     cd yarl && \
@@ -87,11 +95,20 @@ RUN set -ex && \
     make cythonize && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/aio-libs/aiosignal && \
     cd aiosignal && \
     pip wheel . --no-deps && \
     pip install *.whl && \
+    cp *.whl /wheels && \
+    cd .. && \
+    git clone https://github.com/PyYoshi/cChardet && \
+    cd cChardet && \
+    git submodule update --init --recursive && \
+    pip wheel . && \
+    pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/aio-libs/aiohttp && \
     cd aiohttp && \
@@ -99,78 +116,96 @@ RUN set -ex && \
     make generate-llhttp && \
     git am -3 /tmp/0001-aiohttp-orjson.patch && \
     git am -3 /tmp/0001-Fix-TLS-in-TLS-warning.patch && \
-    echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions==3.7.4.3" > requirements/cython.txt && \
+    git am -3 /tmp/0001-Sync-setup.cfg.patch && \
+    echo -e "multidict\ncython==$CYTHON_VERSION\ntyping_extensions>=4.1.1" > requirements/cython.txt && \
     sed -i "s:-c requirements/constraints.txt::g" Makefile && \
     make cythonize && \
     pip wheel -r /tmp/aiohttp.txt && \
     python setup.py bdist_wheel && \
     pip install *.whl && \
     pip install dist/*.whl && \
+    cp *.whl /wheels && \
+    cp dist/*.whl /wheels && \
     TIMEOUT_VERSION=$(pip show async_timeout | grep "Version" | cut -d' ' -f 2) && \
     cd .. && \
     git clone https://github.com/redis/redis-py && \
     cd redis-py && \
-    git am -3 /tmp/0001-Remove-deprecated-things.patch && \
     git am -3 /tmp/0001-Remove-JSON-encoders-and-decoders.patch && \
     sed -i "s:async-timeout>=4.0.2:async-timeout==$TIMEOUT_VERSION:g" setup.py && \
     pip wheel .[hiredis] && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/giampaolo/psutil && \
     cd psutil && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/scrapinghub/dateparser && \
     cd dateparser && \
-    git am -3 /tmp/0001-Support-relative-date-floats.patch && \
-    git pull origin pull/562/merge --no-edit && \
     git pull origin pull/477/merge --no-edit -s recursive -X ours && \
     git am -3 /tmp/0001-Patch-677-ugly.patch && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone --single-branch -b master https://github.com/Gelbpunkt/discord.py && \
     cd discord.py && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
-    git revert b18c2167a33380bf6612ea8ad1d609c2bbd4a5bf && \
-    git revert 05089044e9d402c7918d5f96d82908becf231950 && \
+    cp *.whl /wheels && \
+    git reset --hard HEAD~1 && \
     sed -i "s:discord.py:discord.py-custom:g" setup.py && \
     pip wheel . --no-deps && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/Gelbpunkt/aiowiki && \
     cd aiowiki && \
     rm requirements.txt && \
-    echo "aiohttp==4.0.0a1" > requirements.txt && \
+    echo "aiohttp" > requirements.txt && \
     pip wheel . --no-deps && \
     pip install --no-deps *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/getsentry/sentry-python && \
     cd sentry-python && \
     git am -3 /tmp/0002-Support-orjson.patch && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
-    git clone https://git.travitia.xyz/Adrian/fantasy-names && \
+    git clone https://github.com/Gelbpunkt/fantasy-names && \
     cd fantasy-names && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/nir0s/distro && \
     cd distro && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/dabeaz/sly && \
     cd sly && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
     cd .. && \
     git clone https://github.com/jmoiron/humanize && \
     cd humanize && \
     pip wheel . && \
     pip install *.whl && \
+    cp *.whl /wheels && \
+    cd .. && \
+    git clone https://github.com/aiogram/aiogram && \
+    cd aiogram && \
+    git am -3 /tmp/0001-aiohttp-4.0-changes.patch && \
+    sed -i "s/aiohttp~=3.8.5/aiohttp==4.0.0a2.dev0/g" pyproject.toml && \
+    pip wheel --pre --find-links /wheels . && \
+    pip install *.whl && \
+    cp *.whl /wheels && \
     cd ..
     #cd .. && \
     #git clone https://github.com/Gelbpunkt/zangy && \
@@ -183,9 +218,5 @@ RUN set -ex && \
     #maturin build --no-sdist --release --strip --manylinux off --interpreter python3 && \
     #pip install target/wheels/*.whl && \
     #cd ..
-
-# allow for build caching
-RUN mkdir /wheels && \
-    find . -name \*.whl -exec cp {} /wheels \;
 
 CMD sleep 20

@@ -1,0 +1,24 @@
+From 1e879bf16f8cb16a2fff4559c7931cd16e00bc4d Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Sun, 22 Oct 2023 00:00:52 +0200
+Subject: [PATCH] Sync setup.cfg
+
+---
+ setup.cfg | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/setup.cfg b/setup.cfg
+index 4b63cf03..63e8832e 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -52,6 +52,7 @@ install_requires =
+   yarl >= 1.0, < 2.0
+   frozenlist >= 1.1.1
+   aiosignal >= 1.1.2
++  typing_extensions >= 4.1.1
+ 
+ [options.exclude_package_data]
+ * =
+-- 
+2.41.0
+

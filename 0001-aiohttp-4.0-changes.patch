@@ -1,0 +1,44 @@
+From 6894c29e8fde10ead6e00d7a584bbf8d1715deed Mon Sep 17 00:00:00 2001
+From: Jens Reidel <adrian@travitia.xyz>
+Date: Wed, 12 Jul 2023 02:12:42 +0200
+Subject: [PATCH] aiohttp 4.0 changes
+
+Signed-off-by: Jens Reidel <adrian@travitia.xyz>
+---
+ aiogram/client/session/aiohttp.py | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/aiogram/client/session/aiohttp.py b/aiogram/client/session/aiohttp.py
+index 79e2fa4f..09a90bd5 100644
+--- a/aiogram/client/session/aiohttp.py
++++ b/aiogram/client/session/aiohttp.py
+@@ -18,6 +18,7 @@ from typing import (
+ 
+ import certifi
+ from aiohttp import BasicAuth, ClientError, ClientSession, FormData, TCPConnector
++from aiohttp.client import ClientTimeout
+ from aiohttp.hdrs import USER_AGENT
+ from aiohttp.http import SERVER_SOFTWARE
+ 
+@@ -160,7 +161,8 @@ class AiohttpSession(BaseSession):
+ 
+         try:
+             async with session.post(
+-                url, data=form, timeout=self.timeout if timeout is None else timeout
++                url, data=form, timeout=ClientTimeout(total=self.timeout if timeout is None else
++                                                      timeout)
+             ) as resp:
+                 raw_result = await resp.text()
+         except asyncio.TimeoutError:
+@@ -186,7 +188,7 @@ class AiohttpSession(BaseSession):
+         session = await self.create_session()
+ 
+         async with session.get(
+-            url, timeout=timeout, headers=headers, raise_for_status=raise_for_status
++            url, timeout=ClientTimeout(total=timeout), headers=headers, raise_for_status=raise_for_status
+         ) as resp:
+             async for chunk in resp.content.iter_chunked(chunk_size):
+                 yield chunk
+-- 
+2.41.0
+
