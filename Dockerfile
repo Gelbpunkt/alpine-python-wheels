@@ -17,7 +17,6 @@ COPY 0001-Remove-JSON-encoders-and-decoders.patch /tmp/
 COPY 0001-Build-optimizations.patch /tmp/
 COPY 0001-Fix-compilation-with-latest-cython.patch /tmp/
 COPY 0001-Sync-setup.cfg.patch /tmp/
-COPY 0001-Add-thread-timeout-for-loop.shutdown_default_executo.patch /tmp/
 COPY 0001-aiohttp-4.0-changes.patch /tmp/
 COPY aiohttp.txt /tmp/
 
